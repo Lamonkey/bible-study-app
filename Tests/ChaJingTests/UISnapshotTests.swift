@@ -41,6 +41,8 @@ final class UISnapshotTests: XCTestCase {
              description: "搜索窗口刚打开、输入框为空时，中间显示输入提示和几个示例写法。"),
         Shot(name: "search-result-verse", kind: .search(query: "lq 13:4-8", selectedIndex: 0),
              description: "输入 lq 13:4-8 只命中哥林多前书 13:4-8 一条结果，右侧预览滚动到第 4 节并高亮第 4-8 节。"),
+        Shot(name: "search-result-chapter", kind: .search(query: "约翰福音 1", selectedIndex: 0),
+             description: "输入「约翰福音 1」：整章结果，没有高亮节；此时底部 esc 按钮显示「清空」。"),
         Shot(name: "search-result-multi", kind: .search(query: "yh 3:16", selectedIndex: 0),
              description: "输入 yh 3:16 命中多卷书，左侧列出多条结果，默认选中第一条并在右侧预览。"),
         Shot(name: "search-result-multi-second", kind: .search(query: "yh 3:16", selectedIndex: 1),

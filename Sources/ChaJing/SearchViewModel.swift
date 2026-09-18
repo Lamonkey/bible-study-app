@@ -34,7 +34,7 @@ final class SearchViewModel: ObservableObject {
     func openSelected(inNewWindow: Bool = false) {
         guard let r = selected else { return }
         ReaderWindows.shared.open(r.passage, inNewWindow: inNewWindow)
-        SearchWindowController.shared.hide()
+        SearchWindowController.shared.hide(clearQuery: true)
     }
 
     /// ⌘Enter: copy the selected verse(s) (or whole chapter) with its reference.
@@ -46,6 +46,8 @@ final class SearchViewModel: ObservableObject {
         let pb = NSPasteboard.general
         pb.clearContents()
         pb.setString(payload, forType: .string)
+        // Keep the query, selection and scroll position: copying is usually one step of
+        // several (copy a verse, paste it, come back for the next one).
         SearchWindowController.shared.hide()
     }
 }

@@ -259,7 +259,8 @@ footer p{margin:4px 0}
 <text class="nt" x="857" y="1012.68">新建阅读窗口</text>
 <rect class="n-sys" x="532" y="980" width="172" height="56" rx="7"/>
 <path class="n-stripe" d="M539,980 V1036 Q532,1036 532,1029 V987 Q532,980 539,980 Z"/>
-<text class="nt" x="621" y="1012.68">搜索窗口隐藏</text>
+<text class="nt" x="621" y="1004.18">搜索窗口隐藏</text>
+<text class="nt" x="621" y="1021.18">查询清空</text>
 <rect class="n-pill" x="296" y="984" width="172" height="48" rx="24"/>
 <text class="nt" x="382" y="1012.68">阅读：所选节高亮</text>
 </g><g class="labels">
@@ -282,7 +283,7 @@ footer p{margin:4px 0}
 <li>三种失败显示同一个状态：<span class="ui">没有匹配的书卷或章节</span>，下面一行 <span class="ui">拼音只按字首/音节前缀精确匹配（不做模糊匹配），* 匹配任意音节，? 匹配一个音节</span>。此时 <kbd>⏎</kbd> 和 <kbd>⌘⏎</kbd> 被按键监听吞掉但什么都不做，窗口留在原处。</li>
 <li>只写书名（<code>yh</code>）时每卷一行，副标题形如 <span class="ui">约 · 21 章</span>，打开的是第 1 章且无高亮；只写数字（<code>4:24</code>）时列出所有含该章节的书卷。排序：完全匹配 → 前缀 → 部分匹配，同级按书卷顺序。</li>
 <li>选择：<kbd>↑</kbd> <kbd>↓</kbd> 与 <kbd>⌃N</kbd> <kbd>⌃P</kbd> 到头即停，不循环。单击未选中的行只是选中，单击已选中的行等于 <kbd>⏎</kbd>；第 1 条默认已选中，所以单击它会直接打开。</li>
-<li><kbd>⏎</kbd> 调 <code>ReaderWindows.open(_, inNewWindow: false)</code>：最前的<strong>可见</strong>阅读窗口内容被换掉（没有后退），最小化的窗口不算可见，此时会新建一个。随后 <code>SearchWindowController.hide()</code>。阅读窗口标题形如 <span class="ui">约翰福音 4:24</span>，所选节加强调色底并滚到顶部。</li>
+<li><kbd>⏎</kbd> 调 <code>ReaderWindows.open(_, inNewWindow: false)</code>：最前的<strong>可见</strong>阅读窗口内容被换掉（没有后退），最小化的窗口不算可见，此时会新建一个。随后 <code>SearchWindowController.hide(clearQuery: true)</code>：搜索窗口收起，查询清空，下次呼出是空的。阅读窗口标题形如 <span class="ui">约翰福音 4:24</span>，所选节加强调色底并滚到顶部。</li>
 </ul>
 </section>
 
@@ -348,7 +349,7 @@ footer p{margin:4px 0}
 <text class="nt" x="621" y="772.18">切到相邻一章</text>
 <text class="nt" x="621" y="789.18">高亮取消 · 标题更新</text>
 </g><g class="labels">
-<text class="el" x="153" y="250" text-anchor="start">搜索窗口随即隐藏</text>
+<text class="el" x="153" y="250" text-anchor="start">搜索窗口隐藏，查询清空</text>
 <text class="el" x="611" y="250" text-anchor="end">经文与高亮照搬</text>
 <text class="el" x="265.5" y="422" text-anchor="middle">是</text>
 <text class="el" x="494" y="422" text-anchor="middle">否</text>
@@ -359,7 +360,7 @@ footer p{margin:4px 0}
 </div>
 <ul class="notes">
 <li><kbd>⌘D</kbd> 是 <span class="ui">文件 → 在新窗口打开经文</span>。<code>validateMenuItem</code> 规定：阅读窗口是当前窗口，或搜索窗口在最前且有选中结果时才可用，否则置灰。阅读窗口里的 ⧉ 按钮（<code>plus.square.on.square</code>）悬停提示 <span class="ui">在新窗口打开同一处经文 (⌘D)</span>。</li>
-<li>从搜索窗口走（<kbd>⇧⏎</kbd> / <kbd>⌘D</kbd>）会顺带隐藏搜索窗口；从阅读窗口走则把当前 <code>passage</code> 原样带到新窗口，高亮也带过去（已翻过章的窗口没有高亮可带）。</li>
+<li>从搜索窗口走（<kbd>⇧⏎</kbd> / <kbd>⌘D</kbd>）会顺带隐藏搜索窗口并清空查询（<code>hide(clearQuery: true)</code>）；从阅读窗口走则把当前 <code>passage</code> 原样带到新窗口，高亮也带过去（已翻过章的窗口没有高亮可带）。</li>
 <li>新窗口的摆放在 <code>ReaderWindows.place</code>：有可见阅读窗口时取最前那个的尺寸，从它的左上角连续 cascade 两次，落在它右下方而不是正上方；没有时用本次运行中最后关闭的阅读窗口尺寸（<code>lastSize</code>，只存在内存里），都没有则是默认 640×720，屏幕居中。</li>
 <li>翻章（<code>ReaderModel.step</code>）只在本卷第 1 章到最后一章之间移动，不跨卷；到头时 ‹ / › 按钮 <code>disabled</code>，<kbd>←</kbd> <kbd>→</kbd> 没有反应。</li>
 <li>翻章后新 <code>Passage</code> 的 <code>verse</code>、<code>verseEnd</code> 都是 <code>nil</code>：高亮消失，窗口标题从 <span class="ui">约翰福音 4:24</span> 变成 <span class="ui">约翰福音 5</span>，正文滚回第 1 节。</li>
@@ -416,7 +417,8 @@ footer p{margin:4px 0}
 <text class="nt" x="621" y="441.18">写入纯文本</text>
 <rect class="n-sys" x="296" y="400" width="172" height="56" rx="7"/>
 <path class="n-stripe" d="M303,400 V456 Q296,456 296,449 V407 Q296,400 303,400 Z"/>
-<text class="nt" x="385" y="432.68">搜索窗口隐藏</text>
+<text class="nt" x="385" y="424.18">搜索窗口隐藏</text>
+<text class="nt" x="385" y="441.18">查询保留</text>
 <rect class="n-pill" x="60" y="404" width="172" height="48" rx="24"/>
 <text class="nt" x="146" y="432.68">到目标 App 粘贴</text>
 </g><g class="labels">
@@ -433,7 +435,7 @@ footer p{margin:4px 0}
 —— 约翰福音 4:24 (和合本)</pre>
 节段的出处形如 <span class="ui">—— 哥林多前书 13:4-8 (和合本)</span>，整章形如 <span class="ui">—— 约翰福音 4 (和合本)</span>。</li>
 <li>按键判定在 <code>SearchWindow.swift</code> 的本地监听里：keyCode 36 / 76 且带 <kbd>⌘</kbd> 即复制，<kbd>⌘</kbd> 的判断先于 <kbd>⇧</kbd>，所以 <kbd>⌘⇧⏎</kbd> 也是复制。</li>
-<li>复制成功没有任何提示，窗口直接隐藏；粘贴前还要自己切回目标 App，见<a href="#issues">文末</a>第 B1 条。</li>
+<li>复制成功没有任何提示，窗口直接隐藏。<code>copySelected</code> 调的是不带参数的 <code>hide()</code>：查询、选中项和预览滚到的位置都留着，贴完再按 <kbd>⌥Space</kbd> 原样回来，文字全选，可以接着复制下一处（直接打字则换一个查询）。用 <kbd>⌥Space</kbd> 在别的 App 上呼出时好查经没有被激活，收起后焦点自己回到那个 App，可以直接 <kbd>⌘V</kbd>；只有好查经本来就是活动 App 时才要自己切回去，见<a href="#issues">文末</a>第 B1 条。</li>
 </ul>
 </section>
 
@@ -441,10 +443,14 @@ footer p{margin:4px 0}
 <h2 id="f5"><span class="num">流程 5</span>收起与退出</h2>
 <p class="goal">目标：看完把窗口收走，但热键继续可用；需要时才真正退出。</p>
 <div class="fig">
-<svg class="flow" viewBox="0 0 1000 508" role="img" aria-labelledby="svgt5" style="width:100%;max-width:1000px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
+<svg class="flow" viewBox="-236 0 1236 508" role="img" aria-labelledby="svgt5" style="width:100%;max-width:1236px;min-width:890px" xmlns="http://www.w3.org/2000/svg">
 <title id="svgt5">流程 5：收起与退出</title>
 <defs><marker id="arw5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
 <g class="edges">
+<polyline class="edge" points="-90,108 -90,152" marker-end="url(#arw5)"/>
+<polyline class="edge" points="2,196 60,196" marker-end="url(#arw5)"/>
+<polyline class="edge" points="-90,240 -90,284" marker-end="url(#arw5)"/>
+<polyline class="edge" points="-90,340 -90,404" marker-end="url(#arw5)"/>
 <polyline class="edge" points="146,108 146,168" marker-end="url(#arw5)"/>
 <polyline class="edge" points="146,224 146,404" marker-end="url(#arw5)"/>
 <polyline class="edge" points="382,108 382,312 532,312" marker-end="url(#arw5)"/>
@@ -457,8 +463,21 @@ footer p{margin:4px 0}
 <polyline class="edge" points="710,428 768,428" marker-end="url(#arw5)"/>
 </g><g class="nodes">
 <rect class="n-act" x="60" y="52" width="172" height="56" rx="7"/>
-<text class="nt" x="146" y="76.18">esc / ⌘W /</text>
+<text class="nt" x="146" y="76.18">⌘W，或</text>
 <text class="nt" x="146" y="93.18">点窗口关闭按钮</text>
+<rect class="n-act" x="-176" y="52" width="172" height="56" rx="7"/>
+<text class="nt" x="-90" y="76.18">在搜索窗口按 esc</text>
+<text class="nt" x="-90" y="93.18">（或点底栏 esc 按钮）</text>
+<polygon class="n-dec" points="-90,152 2,196 -90,240 -182,196"/>
+<text class="nt" x="-90" y="192.18">输入框</text>
+<text class="nt" x="-90" y="209.18">有文字？</text>
+<rect class="n-sys" x="-176" y="284" width="172" height="56" rx="7"/>
+<path class="n-stripe" d="M-169,284 V340 Q-176,340 -176,333 V291 Q-176,284 -169,284 Z"/>
+<text class="nt" x="-87" y="308.18">清空输入</text>
+<text class="nt" x="-87" y="325.18">窗口保留</text>
+<rect class="n-pill" x="-176" y="404" width="172" height="48" rx="24"/>
+<text class="nt" x="-90" y="424.18">留在搜索窗口</text>
+<text class="nt" x="-90" y="441.18">再按 esc 才收起</text>
 <rect class="n-act" x="296" y="52" width="172" height="56" rx="7"/>
 <text class="nt" x="382" y="76.18">按 ⌘Q，或</text>
 <text class="nt" x="382" y="93.18">Dock 菜单 →「退出」</text>
@@ -492,6 +511,8 @@ footer p{margin:4px 0}
 <rect class="n-pill" x="768" y="404" width="172" height="48" rx="24"/>
 <text class="nt" x="854" y="432.68">进程结束</text>
 </g><g class="labels">
+<text class="el" x="-83" y="266" text-anchor="start">是</text>
+<text class="el" x="31" y="190" text-anchor="middle">否</text>
 <text class="el" x="389" y="134" text-anchor="start">不带 quit reason</text>
 <text class="el" x="847" y="134" text-anchor="end">带 quit reason</text>
 <text class="el" x="501.5" y="422" text-anchor="middle">否</text>
@@ -499,11 +520,12 @@ footer p{margin:4px 0}
 </g></svg>
 </div>
 <ul class="notes">
-<li><kbd>esc</kbd> 由搜索窗口的本地按键监听处理（keyCode 53 → <code>hide()</code>）；<kbd>⌘W</kbd> 是 <span class="ui">文件 → 关闭窗口</span>，对搜索窗口和阅读窗口都有效。<code>applicationShouldTerminateAfterLastWindowClosed</code> 返回 <code>false</code>，关掉最后一个窗口 App 也不退出。</li>
+<li><kbd>esc</kbd> 由搜索窗口的本地按键监听处理（keyCode 53 → <code>escape()</code>），一步一步往外退：输入框有文字时只把它清空，窗口留着，结果消失、回到空状态的提示；输入框是空的才 <code>hide()</code>。所以从一个打了字的状态收起要按两下。底栏最后一个按钮调的也是 <code>escape()</code>，文字跟着变：有字时是 <span class="ui">清空</span>（悬停提示 <span class="ui">清空输入；再按一次 esc 收起窗口</span>），空的时候是 <span class="ui">隐藏</span>（<span class="ui">收起搜索窗口，应用留在后台</span>）。</li>
+<li><kbd>⌘W</kbd> 是 <span class="ui">文件 → 关闭窗口</span>，对搜索窗口和阅读窗口都有效。<code>applicationShouldTerminateAfterLastWindowClosed</code> 返回 <code>false</code>，关掉最后一个窗口 App 也不退出。</li>
 <li><kbd>⌘Q</kbd> 对应的菜单项标题写的就是 <span class="ui">关闭所有窗口（保留后台）</span>，动作仍是 <code>terminate:</code>，在 <code>applicationShouldTerminate</code> 里被拦下：隐藏搜索窗口、关闭全部阅读窗口，返回 <code>.terminateCancel</code>。Dock 菜单的「退出」走同一条路。</li>
 <li><span class="ui">退出好查经</span>（菜单栏图标菜单和「好查经」菜单各一个，没有快捷键）先把 <code>reallyQuit</code> 置为 <code>true</code> 再调 <code>terminate</code>，于是返回 <code>.terminateNow</code>。</li>
 <li>系统注销、关机、重启发来的退出 Apple Event 带有 <code>kAEQuitReason</code>，<code>quitRequestedBySystem</code> 据此放行；Dock「退出」发的事件不带这个属性，所以被取消。</li>
-<li>收起之后再呼出搜索，上次的查询已被清空（原因见<a href="#f6">流程 6</a>）。</li>
+<li>收起之后再呼出搜索，查询在不在取决于是怎么收起的：<kbd>⌘W</kbd>、关闭按钮、<kbd>⌘Q</kbd> 和再按一次 <kbd>⌥Space</kbd> 以及 <kbd>⌘⏎</kbd> 复制之后的收起，都是不带参数的 <code>hide()</code>，查询留着；<kbd>esc</kbd> 收起时输入框本来就是空的；只有 <kbd>⏎</kbd> / <kbd>⇧⏎</kbd> / <kbd>⌘D</kbd> 打开经文走 <code>hide(clearQuery: true)</code>，查询被清空（见<a href="#f6">流程 6</a>）。</li>
 </ul>
 </section>
 
@@ -531,32 +553,36 @@ footer p{margin:4px 0}
 <text class="nt" x="382" y="325.18">已在最前？</text>
 <rect class="n-sys" x="60" y="284" width="172" height="56" rx="7"/>
 <path class="n-stripe" d="M67,284 V340 Q60,340 60,333 V291 Q60,284 67,284 Z"/>
-<text class="nt" x="149" y="316.68">收起搜索窗口</text>
+<text class="nt" x="149" y="308.18">收起搜索窗口</text>
+<text class="nt" x="149" y="325.18">查询保留</text>
 <rect class="n-pill" x="51" y="404" width="190" height="48" rx="24"/>
-<text class="nt" x="146" y="432.68">下次呼出时查询已清空</text>
+<text class="nt" x="146" y="424.18">焦点回到下面的 App</text>
+<text class="nt" x="146" y="441.18">下次呼出原样回来</text>
 <polygon class="n-dec" points="382,384 474,428 382,472 290,428"/>
 <text class="nt" x="382" y="424.18">窗口此刻</text>
 <text class="nt" x="382" y="441.18">可见？</text>
 <rect class="n-sys" x="532" y="400" width="172" height="56" rx="7"/>
 <path class="n-stripe" d="M539,400 V456 Q532,456 532,449 V407 Q532,400 539,400 Z"/>
-<text class="nt" x="621" y="424.18">清空查询，移到</text>
-<text class="nt" x="621" y="441.18">鼠标所在屏幕中上方</text>
+<text class="nt" x="621" y="424.18">移到鼠标所在</text>
+<text class="nt" x="621" y="441.18">屏幕的中上方</text>
 <rect class="n-sys" x="296" y="516" width="172" height="56" rx="7"/>
 <path class="n-stripe" d="M303,516 V572 Q296,572 296,565 V523 Q296,516 303,516 Z"/>
-<text class="nt" x="385" y="540.18">置前 · 激活 App</text>
-<text class="nt" x="385" y="557.18">聚焦输入框</text>
+<text class="nt" x="385" y="540.18">置前 · 不激活 App</text>
+<text class="nt" x="385" y="557.18">聚焦，全选旧查询</text>
 <rect class="n-pill" x="296" y="636" width="172" height="48" rx="24"/>
 <text class="nt" x="382" y="664.68">可以输入</text>
 </g><g class="labels">
 <text class="el" x="265.5" y="306" text-anchor="middle">是</text>
 <text class="el" x="389" y="374" text-anchor="start">否</text>
 <text class="el" x="498.5" y="422" text-anchor="middle">否</text>
-<text class="el" x="389" y="490" text-anchor="start">是：保留查询与位置</text>
+<text class="el" x="389" y="490" text-anchor="start">是：位置不变</text>
 </g></svg>
 </div>
 <ul class="notes">
-<li><code>SearchWindowController.toggle()</code>：<code>isFrontmost</code>（<code>NSApp.isActive</code>、窗口可见、且是 key window 三者同时成立）为真就 <code>hide()</code>，否则 <code>show()</code>。</li>
-<li><code>show()</code> 只在窗口<strong>不可见</strong>时清空查询并重新定位：移到鼠标所在的屏幕，水平居中，垂直方向比正中高出可视区高度的 12%。窗口可见但被挡住，或 App 不在前台时，保留原查询和位置，只是置前。每次都会 <code>focusToken += 1</code> 让输入框重新获得焦点。</li>
+<li><code>SearchWindowController.toggle()</code>：<code>isFrontmost</code>（窗口可见、且是 key window；不再看 <code>NSApp.isActive</code>，因为作为浮层时窗口是 key 而好查经并不是活动 App）为真就 <code>hide()</code>，否则 <code>show()</code>。</li>
+<li>搜索窗口是 <code>SearchPanel</code>（<code>NSPanel</code> 的子类，带 <code>.nonactivatingPanel</code>），外观仍是普通主窗口。热键和菜单栏图标调的 <code>show()</code> 不带 <code>activate</code>：别的 App 在前台时（全屏也一样），窗口以 <code>.floating</code> 层级叠在它上面并拿到键盘，好查经本身不被激活；收起后键盘焦点直接回到下面那个 App。启动和点 Dock 图标走 <code>show(activate: true)</code>，才会把整个 App 带到前台。</li>
+<li><kbd>⌥Space</kbd> 是保留查询的快速开关：<code>hide()</code> 默认不动查询，<code>show()</code> 也不再清空它。再呼出时查询、结果和选中项都在；查询非空时 <code>show()</code> 会对输入框 <code>selectAll</code>，直接打字就替换，按 <kbd>→</kbd> 则保留下来接着改。查询只在两处被清空：<kbd>esc</kbd>（见<a href="#f5">流程 5</a>），以及 <kbd>⏎</kbd> / <kbd>⇧⏎</kbd> / <kbd>⌘D</kbd> 把经文打开到阅读窗口之后的 <code>hide(clearQuery: true)</code>。<kbd>⌘⏎</kbd> 复制不清空（见<a href="#f4">流程 4</a>）。</li>
+<li><code>show()</code> 只在窗口<strong>不可见</strong>时重新定位：移到鼠标所在的屏幕，水平居中，垂直方向比正中高出可视区高度的 12%。窗口可见但被挡住时位置不变，只是置前（开在用户已经离开的 Space 上时，先收起再在当前 Space 重新出现）。每次都会 <code>focusToken += 1</code> 让输入框重新获得焦点。</li>
 <li><kbd>⌥Space</kbd> 在哪个 App 里按都走这条路，好查经自己在前台时也一样：在阅读窗口里按它呼出搜索，搜索已在最前时再按一次收起。</li>
 <li><kbd>⌘F</kbd> 和菜单栏的 <span class="ui">打开搜索  (⌥Space)</span> 调的是 <code>show()</code>，不会收起窗口。</li>
 </ul>
@@ -573,10 +599,10 @@ footer p{margin:4px 0}
 <tr><td class="n">A2</td><td>同一句：点「菜单栏图标」呼出搜索。</td><td>点图标只弹出菜单，要再选 <span class="ui">打开搜索  (⌥Space)</span>，一共两步。</td><td><code>installStatusItem</code></td></tr>
 <tr><td class="n">A3</td><td>README：<kbd>⌥Space</kbd>「全局快捷键，不需要任何系统权限」，启动后「即生效」。</td><td>注册结果被丢弃；组合被其他 App 占用时注册失败，没有提示也没有退路。它现在是唯一的全局热键，失败时只能靠 Dock 图标和菜单栏图标，这一条比以前更要紧。</td><td><code>hotkey?.register()</code>，<code>GlobalHotkey.register</code></td></tr>
 <tr><td class="n">A4</td><td>（已不适用）菜单栏菜单项和「关于好查经」窗口底部曾把第二个全局快捷键 Space+P 写成通用入口，而它在好查经自己是活动 App 时无效。</td><td>该快捷键连同权限流程已整体移除。两处现在只写 <kbd>⌥Space</kbd>：<span class="ui">打开搜索  (⌥Space)</span> 和 <span class="ui">⌥Space 呼出搜索 · ⏎ 打开 · ⇧⏎ / ⌘D 新窗口 · ⌘⏎ 复制</span>，与行为一致。</td><td><code>installStatusItem</code>，<code>AboutWindow.swift</code></td></tr>
-<tr><td class="n">A5</td><td>搜索窗口底栏：<span class="ui">↑↓ 选择    ⏎ 打开    ⇧⏎ 新窗口打开    ⌘⏎ 复制经文    esc 隐藏</span>。</td><td>还支持 <kbd>⌃N</kbd> <kbd>⌃P</kbd>、<kbd>⌘D</kbd>、<kbd>⌘W</kbd>，以及「单击已选中的行即打开」，底栏都没提。属于遗漏，不算矛盾。</td><td><code>SearchView.swift</code>，<code>SearchWindow.installKeyMonitor</code></td></tr>
+<tr><td class="n">A5</td><td>搜索窗口底栏：<span class="ui">↑↓ 选择    ⏎ 打开    ⇧⏎ 新窗口打开    ⌘⏎ 复制经文    esc 隐藏</span>（输入框有字时最后一项是 <span class="ui">esc 清空</span>）。</td><td>还支持 <kbd>⌃N</kbd> <kbd>⌃P</kbd>、<kbd>⌘D</kbd>、<kbd>⌘W</kbd>，以及「单击已选中的行即打开」，底栏都没提。属于遗漏，不算矛盾。</td><td><code>SearchView.swift</code>，<code>SearchWindow.installKeyMonitor</code></td></tr>
 <tr><td class="n">A6</td><td>无结果时的说明只讲拼音规则：<span class="ui">拼音只按字首/音节前缀精确匹配（不做模糊匹配）…</span></td><td>同一个状态也由数字格式错误（<code>yh 4:24:</code>）和章节越界（<code>yhfy 4:99</code>）触发，这两种情况下这句说明对不上原因。</td><td><code>SearchView.emptyState</code>，<code>SearchEngine.search</code></td></tr>
 <tr><td class="n">A7</td><td>README：阅读窗口「右上角 ⧉ 按钮」。</td><td>⧉ 在标题栏下方工具行的右数第二个，最右边是「下一章」›。</td><td><code>ReaderView</code></td></tr>
-<tr><td class="n">A8</td><td>源码注释仍称搜索界面为 floating search bar / panel（文件刚从 <code>SearchPanel.swift</code> 改名）。</td><td>现在是普通的带标题栏、可缩放、可最小化的 <code>NSWindow</code>，App 失去焦点时也不会自动隐藏。只影响读代码的人。</td><td><code>SearchViewModel.swift</code>，<code>SearchEngine.swift</code></td></tr>
+<tr><td class="n">A8</td><td>（已修复）源码注释称搜索界面为 floating search bar / panel，而当时它是一个普通的 <code>NSWindow</code>。</td><td>现在又是面板了：<code>SearchPanel</code>（<code>NSPanel</code> + <code>.nonactivatingPanel</code>），只是穿着主窗口的外衣（标题栏、关闭按钮、可缩放、列在「窗口」菜单里，<code>hidesOnDeactivate = false</code>）；<code>SearchWindow.swift</code> 顶部注释写的就是这个模型。只有作为浮层时才是 <code>.floating</code> 层级，<code>SearchViewModel.swift</code> 里那句 floating search bar 大体说得通。</td><td><code>SearchViewModel.swift</code>，<code>SearchEngine.swift</code></td></tr>
 <tr><td class="n">A9</td><td>输入框上挂着 <code>.onSubmit { model.openSelected() }</code>。</td><td>按键监听在它之前就把 <kbd>⏎</kbd> 吞掉了，这段回调在监听装着的时候走不到，是死代码。</td><td><code>SearchView.swift</code></td></tr>
 </table></div>
 
@@ -584,14 +610,15 @@ footer p{margin:4px 0}
 <p class="caveat">以下是从源码推断的，没有运行 App 验证；标「高」的值得先确认。</p>
 <div class="tablewrap"><table>
 <tr><th>#</th><th>现象</th><th>原因</th><th>程度</th></tr>
-<tr><td class="n">B1</td><td>收起搜索窗口后焦点不回到原来的 App。<kbd>⌘⏎</kbd> 复制完要先手动切回去才能 <kbd>⌘V</kbd>。只在好查经已是活动 App 时如此（启动、点 Dock 图标之后）；别的 App 在前台时用 <kbd>⌥Space</kbd> 呼出的是不激活 App 的浮层，收起后焦点自己回去。</td><td><code>hide()</code> 只 <code>orderOut</code>，没有 <code>NSApp.hide</code> 或重新激活上一个 App，好查经仍是活动 App。</td><td><span class="sev hi">高</span></td></tr>
-<tr><td class="n">B2</td><td>用中文输入法打「约翰福音」时，选字的 <kbd>↑</kbd> <kbd>↓</kbd>、上屏的 <kbd>⏎</kbd>、取消的 <kbd>esc</kbd> 可能被搜索窗口抢走（移动选中项 / 打开经文 / 收起窗口）。</td><td><code>installKeyMonitor</code> 的本地监听先于输入法拿到按键，且没有检查输入框是否有未上屏的候选文字。</td><td><span class="sev hi">高</span></td></tr>
-<tr><td class="n">B3</td><td>复制成功没有任何反馈，窗口只是消失。</td><td><code>copySelected</code> 写完剪贴板就 <code>hide()</code>。</td><td><span class="sev">中</span></td></tr>
+<tr><td class="n">B1</td><td>（主要情形已修复）收起搜索窗口后焦点不回到原来的 App。别的 App 在前台时用 <kbd>⌥Space</kbd> 或菜单栏图标呼出的是不激活 App 的浮层，收起后焦点自己回到下面那个 App，<kbd>⌘⏎</kbd> 之后可以直接 <kbd>⌘V</kbd>。余下的只有好查经本来就是活动 App 的情形（刚启动、点了 Dock 图标、正在阅读窗口里）：这时收起搜索，前台仍是好查经。</td><td>搜索窗口改成了 <code>.nonactivatingPanel</code>，热键路径的 <code>show()</code> 不调 <code>NSApp.activate</code>，<code>isFrontmost</code> 也不再要求 <code>NSApp.isActive</code>。<code>hide()</code> 仍只是 <code>orderOut</code>，不会替用户切回上一个 App。</td><td><span class="sev">已修复 · 余下为低</span></td></tr>
+<tr><td class="n">B2</td><td>用中文输入法打「约翰福音」时，选字的 <kbd>↑</kbd> <kbd>↓</kbd>、上屏的 <kbd>⏎</kbd>、取消的 <kbd>esc</kbd> 可能被搜索窗口抢走（移动选中项 / 打开经文 / 清空输入或收起窗口）。</td><td><code>installKeyMonitor</code> 的本地监听先于输入法拿到按键，且没有检查输入框是否有未上屏的候选文字。</td><td><span class="sev hi">高</span></td></tr>
+<tr><td class="n">B3</td><td>复制成功没有任何反馈，窗口只是消失。</td><td><code>copySelected</code> 写完剪贴板就 <code>hide()</code>（查询留着）。</td><td><span class="sev">中</span></td></tr>
 <tr><td class="n">B4</td><td><kbd>⏎</kbd> 会覆盖最前阅读窗口里正在读的经文，没有后退；翻章到卷末不能进下一卷。</td><td><code>ReaderWindows.open</code> 直接改 <code>model.passage</code>；<code>ReaderModel.step</code> 限定在本卷。</td><td><span class="sev">中</span></td></tr>
 <tr><td class="n">B5</td><td>节段写反（<code>yhfy 4:24-20</code>）不报错，被当成单节 4:24。</td><td><code>Passage.verseRange</code> 取 <code>max(v, verseEnd)</code>，标题也只在 <code>e &gt; v</code> 时才显示节尾。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B6</td><td><kbd>⌘↑</kbd>、<kbd>⌥↓</kbd> 这类带修饰键的方向键也被当作移动选中项，输入框里的光标跳转失效。</td><td>监听里 keyCode 125 / 126 两个分支不看修饰键。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B7</td><td>阅读窗口的大小和位置不跨启动保存；搜索窗口虽然设了 <code>setFrameAutosaveName("ChaJingSearch")</code>，但每次从隐藏状态呼出都会重新居中，实际只有尺寸被记住。</td><td><code>ReaderWindows.lastSize</code> 只在内存里；<code>show()</code> 调 <code>centerOnActiveScreen()</code>。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B8</td><td>（已不适用）快捷键开关菜单项的标题会不会与实际状态不符。</td><td>那个菜单项连同权限流程已移除，两个菜单里的标题现在都是固定文字。</td><td><span class="sev">已不适用</span></td></tr>
+<tr><td class="n">B9</td><td>用 <kbd>⌥Space</kbd>、<kbd>⌘W</kbd>、<kbd>⌘Q</kbd> 收起，或 <kbd>⌘⏎</kbd> 复制之后，留下的查询没有期限。隔一小时再呼出，看到的还是上次的结果和预览；文字是全选的，直接打字不受影响，但这时想按 <kbd>esc</kbd> 收起，第一下只会清空。另外，只想看一眼预览就走的人没有「一下收起并清空」的按法。对「复制一处、贴好、回来复制下一处」来说，留着正是想要的，所以代价不大。</td><td><code>hide()</code> 默认保留 <code>model.query</code>，<code>show()</code> 不看距离上次收起过了多久；<code>escape()</code> 在有字时只清空。可以考虑收起超过几分钟后自动清空。</td><td><span class="sev">低</span></td></tr>
 </table></div>
 </section>
 

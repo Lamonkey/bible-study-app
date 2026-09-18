@@ -59,8 +59,10 @@ struct SearchView: View {
                 HintButton(keys: "⌘⏎", label: "复制经文", help: "把所选经文和出处复制到剪贴板") { model.copySelected() }
                     .disabled(model.selected == nil)
                     .uiRegion("search.footer.copy")
-                HintButton(keys: "esc", label: "隐藏", help: "收起搜索窗口，应用留在后台") {
-                    SearchWindowController.shared.hide()
+                // Mirrors the esc key: with text in the field it clears, otherwise it hides.
+                HintButton(keys: "esc", label: model.query.isEmpty ? "隐藏" : "清空",
+                           help: model.query.isEmpty ? "收起搜索窗口，应用留在后台" : "清空输入；再按一次 esc 收起窗口") {
+                    SearchWindowController.shared.escape()
                 }
                 .uiRegion("search.footer.hide")
                 Spacer()

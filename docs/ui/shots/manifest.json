@@ -317,6 +317,203 @@
     "width" : 760
   },
   {
+    "description" : "输入「约翰福音 1」：整章结果，没有高亮节；此时底部 esc 按钮显示「清空」。",
+    "files" : [
+      "search-result-chapter.light.png",
+      "search-result-chapter.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-result-chapter",
+    "query" : "约翰福音 1",
+    "regions" : [
+      {
+        "height" : 20,
+        "id" : "passage.heading",
+        "width" : 94,
+        "x" : 265,
+        "y" : 25
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.1",
+        "width" : 464,
+        "x" : 265,
+        "y" : 51
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.10",
+        "width" : 464,
+        "x" : 265,
+        "y" : 330
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.11",
+        "width" : 464,
+        "x" : 265,
+        "y" : 361
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.12",
+        "width" : 464,
+        "x" : 265,
+        "y" : 392
+      },
+      {
+        "height" : 37,
+        "id" : "passage.verse.13",
+        "width" : 464,
+        "x" : 265,
+        "y" : 423
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.2",
+        "width" : 464,
+        "x" : 265,
+        "y" : 82
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.3",
+        "width" : 464,
+        "x" : 265,
+        "y" : 113
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.4",
+        "width" : 464,
+        "x" : 265,
+        "y" : 144
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.5",
+        "width" : 464,
+        "x" : 265,
+        "y" : 175
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.6",
+        "width" : 464,
+        "x" : 265,
+        "y" : 206
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.7",
+        "width" : 464,
+        "x" : 265,
+        "y" : 237
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.8",
+        "width" : 464,
+        "x" : 265,
+        "y" : 268
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.9",
+        "width" : 464,
+        "x" : 265,
+        "y" : 299
+      },
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "height" : 379,
+        "id" : "search.preview",
+        "width" : 509,
+        "x" : 251,
+        "y" : 51
+      },
+      {
+        "height" : 379,
+        "id" : "search.resultList",
+        "width" : 250,
+        "x" : 0,
+        "y" : 51
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.selected",
+        "width" : 250,
+        "x" : 0,
+        "y" : 55
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
     "description" : "输入 yh 3:16 命中多卷书，左侧列出多条结果，默认选中第一条并在右侧预览。",
     "files" : [
       "search-result-multi.light.png",

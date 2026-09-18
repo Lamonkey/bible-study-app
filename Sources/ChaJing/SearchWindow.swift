@@ -84,10 +84,10 @@ final class SearchWindowController: NSWindowController, NSWindowDelegate {
     ///   holds its windows, i.e. away from the full-screen app the user is working in.
     func show(activate: Bool = false) {
         guard let window else { return }
-        if !window.isVisible {
-            model.query = ""
-            centerOnActiveScreen()
-        }
+        // The query is kept across a quick ⌥Space hide/show, so the user can glance at
+        // something else and come straight back. Copying (⌘⏎) keeps it too. It is cleared
+        // by esc and after a passage is opened with ⏎ / ⇧⏎.
+        if !window.isVisible { centerOnActiveScreen() }
         installKeyMonitor()
         // Still open on a Space the user has left: take it off screen first, so that it is
         // ordered in afresh on the current Space (the same path as summoning it from hidden).
@@ -100,12 +100,26 @@ final class SearchWindowController: NSWindowController, NSWindowDelegate {
         window.makeKeyAndOrderFront(nil)
         if activate { NSApp.activate(ignoringOtherApps: true) }
         model.focusToken += 1
+        // Coming back to an old query: select it, so typing replaces it and → keeps it.
+        if !model.query.isEmpty {
+            DispatchQueue.main.async { [weak window] in
+                (window?.firstResponder as? NSTextView)?.selectAll(nil)
+            }
+        }
     }
 
-    func hide() {
+    /// `clearQuery`: the task is finished (a passage was opened in a reader), start fresh
+    /// next time. A plain hide (⌥Space, ⌘W, the close button, ⌘⏎ copy) keeps what was typed.
+    func hide(clearQuery: Bool = false) {
         removeKeyMonitor()
         window?.orderOut(nil)
         window?.level = .normal
+        if clearQuery { model.query = "" }
+    }
+
+    /// esc backs out one step at a time: first it clears the input, then it hides.
+    func escape() {
+        if model.query.isEmpty { hide() } else { model.query = "" }
     }
 
     /// ⌘D in the search window: open the selected passage in a new reader window.
@@ -133,7 +147,7 @@ final class SearchWindowController: NSWindowController, NSWindowDelegate {
             let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
             switch event.keyCode {
             case 53: // esc
-                self.hide(); return nil
+                self.escape(); return nil
             case 125: // down
                 self.model.moveSelection(by: 1); return nil
             case 126: // up
