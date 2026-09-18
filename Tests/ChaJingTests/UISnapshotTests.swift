@@ -122,6 +122,7 @@ final class UISnapshotTests: XCTestCase {
                 XCTAssertGreaterThan(Self.distinctColors(in: rep), 8, "\(url.lastPathComponent) looks blank")
                 let png = try XCTUnwrap(rep.representation(using: .png, properties: [:]))
                 try png.write(to: url)
+                assertPreviewPosition(shot, in: url.lastPathComponent)
             }
             // Frames of the named UI parts (points, origin top-left), for labelled overlays.
             entry["regions"] = lastRegions
@@ -144,6 +145,23 @@ final class UISnapshotTests: XCTestCase {
     }
 
     // MARK: - Rendering
+
+    /// The preview must have finished scrolling before the capture, in every appearance:
+    /// a typed verse sits at the top of the preview, a verse reached with ← at the bottom.
+    private func assertPreviewPosition(_ shot: Shot, in file: String) {
+        guard let preview = lastRegions["search.preview"],
+              let verse = lastRegions["passage.verse.highlighted"] else { return }
+        switch shot.kind {
+        case .searchStep(_, let delta) where delta < 0:
+            XCTAssertEqual(verse.maxY, preview.maxY, accuracy: 3, "\(file): highlighted verse is not at the bottom")
+        case .searchStep:
+            XCTAssertNotNil(lastRegions["passage.heading"], "\(file): chapter heading is not visible")
+        case .search:
+            XCTAssertEqual(verse.minY, preview.minY, accuracy: 3, "\(file): highlighted verse is not at the top")
+        default:
+            break
+        }
+    }
 
     /// Filled by `RegionProbe` while a view is rendered; read after the last settle.
     private var lastRegions: [String: CGRect] = [:]

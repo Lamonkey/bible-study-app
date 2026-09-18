@@ -125,7 +125,7 @@ footer p{margin:4px 0}
 <h3>目录</h3>
 <ol class="toc">
 <li><a href="#f1">首次启动</a> <span>启动后发生什么，哪些入口随之就位</span></li>
-<li><a href="#f2">查一处经文并阅读</a> <span>三个入口 → 输入 → 选择 → 阅读窗口</span></li>
+<li><a href="#f2">查一处经文并阅读</a> <span>三个入口 → 输入 → 选择（鼠标选经节、← → 翻章）→ 阅读窗口</span></li>
 <li><a href="#f3">同时对照多处经文</a> <span>多开阅读窗口、复制窗口、翻章</span></li>
 <li><a href="#f4">复制经文</a> <span>⌘⏎ 写进剪贴板的确切内容</span></li>
 <li><a href="#f5">收起与退出</a> <span>哪些操作只是收起，哪些才真正退出</span></li>
@@ -195,6 +195,8 @@ footer p{margin:4px 0}
 <polyline class="edge" points="474,544 768,544" marker-end="url(#arw2)"/>
 <polyline class="edge" points="474,660 854,660 854,572" marker-end="url(#arw2)"/>
 <polyline class="edge" points="940,544 962,544 962,312 468,312" marker-end="url(#arw2)"/>
+<polyline class="edge" points="352,804 352,864" marker-end="url(#arw2)"/>
+<polyline class="edge" points="412,864 412,804" marker-end="url(#arw2)"/>
 <polyline class="edge" points="296,776 232,776" marker-end="url(#arw2)"/>
 <polyline class="edge" points="468,776 532,776" marker-end="url(#arw2)"/>
 <polyline class="edge" points="704,776 768,776" marker-end="url(#arw2)"/>
@@ -238,6 +240,9 @@ footer p{margin:4px 0}
 <path class="n-stripe" d="M303,748 V804 Q296,804 296,797 V755 Q296,748 303,748 Z"/>
 <text class="nt" x="385" y="772.18">列出结果 + 经文预览</text>
 <text class="nt" x="385" y="789.18">默认选中第 1 条</text>
+<rect class="n-act" x="296" y="864" width="172" height="56" rx="7"/>
+<text class="nt" x="382" y="888.18">鼠标选经节 / ← → 翻章</text>
+<text class="nt" x="382" y="905.18">输入框同步改写</text>
 <rect class="n-pill" x="60" y="752" width="172" height="48" rx="24"/>
 <text class="nt" x="146" y="772.18">⇧⏎ ⌘⏎ esc</text>
 <text class="nt" x="146" y="789.18">→ 流程 3 · 4 · 5</text>
@@ -272,6 +277,8 @@ footer p{margin:4px 0}
 <text class="el" x="500" y="654" text-anchor="middle">否</text>
 <text class="el" x="812" y="306" text-anchor="middle">继续修改输入</text>
 <text class="el" x="268.5" y="770" text-anchor="middle">其他键</text>
+<text class="el" x="345" y="838" text-anchor="end">不重打，直接改</text>
+<text class="el" x="419" y="838" text-anchor="start">重新搜索</text>
 <text class="el" x="737.5" y="886" text-anchor="middle">是</text>
 <text class="el" x="861" y="954" text-anchor="start">否</text>
 </g></svg>
@@ -282,8 +289,10 @@ footer p{margin:4px 0}
 <li>三个判定依次落在 <code>QueryParser.parse</code>（第一个 ASCII 数字之前是书名，之后必须是「章 [分隔符 节 [- ~ — 至 到 节尾]]」，<code>yh 4:24:</code> 解析失败）、<code>BookMatcher.match</code>（不做模糊匹配；拉丁书名只允许 a–z、<code>*</code>、<code>?</code>，所以 <code>yhfyx</code>、<code>yh fy 4</code>、<code>yh-4</code> 都没有结果）、<code>SearchEngine.search</code>（没有该章或该节的书卷被剔除：<code>yh 4:24</code> 的四卷「约翰」只剩约翰福音；节尾超出本章时截到末节，如 <code>yhfy 4:20-99</code>）。</li>
 <li>三种失败显示同一个状态：<span class="ui">没有匹配的书卷或章节</span>，下面一行 <span class="ui">拼音只按字首/音节前缀精确匹配（不做模糊匹配），* 匹配任意音节，? 匹配一个音节</span>。此时 <kbd>⏎</kbd> 和 <kbd>⌘⏎</kbd> 被按键监听吞掉但什么都不做，窗口留在原处。</li>
 <li>只写书名（<code>yh</code>）时每卷一行，副标题形如 <span class="ui">约 · 21 章</span>，打开的是第 1 章且无高亮；只写数字（<code>4:24</code>）时列出所有含该章节的书卷。排序：完全匹配 → 前缀 → 部分匹配，同级按书卷顺序。</li>
+<li>结果出来之后可以不重打字就改查询，图上是结果节点下面那个小回路。①在右侧预览里用鼠标选经节：点一节、拖过几节，或按住 <kbd>⇧</kbd> 再点（从当前范围的另一头延长）；<code>SearchViewModel.selectVerses</code> 把范围截在本章之内，输入框被改写成 <span class="ui">约翰福音 1:1</span> 或 <span class="ui">约翰福音 1:1-2</span> 这样的「书名全名 章:节」，高亮实时跟着变，预览不滚动（<code>PreviewScroll.stay</code>）。②不带修饰键的 <kbd>←</kbd> <kbd>→</kbd>（或点底栏的 <span class="ui">← 上一章</span> / <span class="ui">→ 下一章</span>）在选中结果那卷书里翻章（<code>stepChapter</code>）：<kbd>→</kbd> 改写成「书名 章+1:1」，第 1 节高亮，章标题在预览顶部；<kbd>←</kbd> 改写成「书名 章-1:最后一节」，那一节高亮并显示在预览<strong>底部</strong>，因为往回翻的人多半想接着上文往上读（从 <span class="ui">约翰福音 2:3</span> 按 <kbd>←</kbd> 得到 <span class="ui">约翰福音 1:51</span>，再按 <kbd>→</kbd> 两下得到 <span class="ui">约翰福音 3:1</span>）。只有书名的结果按第 1 章算；到本卷第一章 / 最后一章就停，按钮变灰，不跨卷。两种改写都用中文全名，<code>yh</code> 这类有歧义的缩写才不会翻着翻着换了一卷书；改写同样触发重新搜索，选中项回到第 1 条。</li>
+<li>按键归属：带 <kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>⌃</kbd> 任一修饰键的 <kbd>←</kbd> <kbd>→</kbd> 不被拦截，照常在输入框里移动光标、选字；没有选中结果（空状态、无匹配）时单按 <kbd>←</kbd> <kbd>→</kbd> 也照常移动光标。中文输入法正在选字（输入框里有未上屏的拼音，<code>hasMarkedText()</code>）时，监听把所有按键原样交给输入法。</li>
 <li>选择：<kbd>↑</kbd> <kbd>↓</kbd> 与 <kbd>⌃N</kbd> <kbd>⌃P</kbd> 到头即停，不循环。单击未选中的行只是选中，单击已选中的行等于 <kbd>⏎</kbd>；第 1 条默认已选中，所以单击它会直接打开。</li>
-<li><kbd>⏎</kbd> 调 <code>ReaderWindows.open(_, inNewWindow: false)</code>：最前的<strong>可见</strong>阅读窗口内容被换掉（没有后退），最小化的窗口不算可见，此时会新建一个。随后 <code>SearchWindowController.hide(clearQuery: true)</code>：搜索窗口收起，查询清空，下次呼出是空的。阅读窗口标题形如 <span class="ui">约翰福音 4:24</span>，所选节加强调色底并滚到顶部。</li>
+<li><kbd>⏎</kbd> 调 <code>ReaderWindows.open(_, inNewWindow: false)</code>：最前的<strong>可见</strong>阅读窗口内容被换掉（没有后退），最小化的窗口不算可见，此时会新建一个。随后 <code>SearchWindowController.hide(clearQuery: true)</code>：搜索窗口收起，查询清空，下次呼出是空的。阅读窗口标题形如 <span class="ui">约翰福音 4:24</span>，所选节加强调色底并滚到顶部（所选的是第 1 节或整章时，滚到的是章标题 <span class="ui">约翰福音 第 4 章</span> 这一行）。用鼠标选过范围的话，打开后高亮的就是那个范围。</li>
 </ul>
 </section>
 
@@ -363,7 +372,7 @@ footer p{margin:4px 0}
 <li>从搜索窗口走（<kbd>⇧⏎</kbd> / <kbd>⌘D</kbd>）会顺带隐藏搜索窗口并清空查询（<code>hide(clearQuery: true)</code>）；从阅读窗口走则把当前 <code>passage</code> 原样带到新窗口，高亮也带过去（已翻过章的窗口没有高亮可带）。</li>
 <li>新窗口的摆放在 <code>ReaderWindows.place</code>：有可见阅读窗口时取最前那个的尺寸，从它的左上角连续 cascade 两次，落在它右下方而不是正上方；没有时用本次运行中最后关闭的阅读窗口尺寸（<code>lastSize</code>，只存在内存里），都没有则是默认 640×720，屏幕居中。</li>
 <li>翻章（<code>ReaderModel.step</code>）只在本卷第 1 章到最后一章之间移动，不跨卷；到头时 ‹ / › 按钮 <code>disabled</code>，<kbd>←</kbd> <kbd>→</kbd> 没有反应。</li>
-<li>翻章后新 <code>Passage</code> 的 <code>verse</code>、<code>verseEnd</code> 都是 <code>nil</code>：高亮消失，窗口标题从 <span class="ui">约翰福音 4:24</span> 变成 <span class="ui">约翰福音 5</span>，正文滚回第 1 节。</li>
+<li>翻章后新 <code>Passage</code> 的 <code>verse</code>、<code>verseEnd</code> 都是 <code>nil</code>：高亮消失，窗口标题从 <span class="ui">约翰福音 4:24</span> 变成 <span class="ui">约翰福音 5</span>。<kbd>→</kbd> 翻到下一章时从章标题和第 1 节开始显示；<kbd>←</kbd> 翻到上一章时显示的是<strong>章末</strong>（<code>ReaderModel.step</code> 里 <code>scroll = delta &lt; 0 ? .bottom : .top</code>，正文滚到底、最后一节贴着窗口下沿），方便接着上文往回读。新打开的经文（<code>show</code>）总是从顶部开始。</li>
 </ul>
 </section>
 
@@ -429,6 +438,7 @@ footer p{margin:4px 0}
 </g></svg>
 </div>
 <ul class="notes">
+<li>复制的是<strong>当前选中结果</strong>的范围。在预览里用鼠标选过经节的话（见<a href="#f2">流程 2</a>），输入已经被改写成那个范围，<kbd>⌘⏎</kbd> 复制的正是鼠标选中的那几节，出处行也跟着变（如 <span class="ui">—— 约翰福音 1:1-2 (和合本)</span>）。</li>
 <li>逻辑在 <code>SearchViewModel.copySelected</code>：<code>store.text(for:numbered: r.verse == nil)</code>。查询带节号时每节一行、不带节号；只到章（或只有书名，取第 1 章）时复制整章，每行是「节号 + 空格 + 经文」。</li>
 <li>正文之后换行，再加出处行 <code>—— \(reference) (和合本)</code>。例：<code>yh 4:24</code> 得到
 <pre>神是个灵（或无个字），所以拜他的必须用心灵和诚实拜他。
@@ -599,7 +609,7 @@ footer p{margin:4px 0}
 <tr><td class="n">A2</td><td>同一句：点「菜单栏图标」呼出搜索。</td><td>点图标只弹出菜单，要再选 <span class="ui">打开搜索  (⌥Space)</span>，一共两步。</td><td><code>installStatusItem</code></td></tr>
 <tr><td class="n">A3</td><td>README：<kbd>⌥Space</kbd>「全局快捷键，不需要任何系统权限」，启动后「即生效」。</td><td>注册结果被丢弃；组合被其他 App 占用时注册失败，没有提示也没有退路。它现在是唯一的全局热键，失败时只能靠 Dock 图标和菜单栏图标，这一条比以前更要紧。</td><td><code>hotkey?.register()</code>，<code>GlobalHotkey.register</code></td></tr>
 <tr><td class="n">A4</td><td>（已不适用）菜单栏菜单项和「关于好查经」窗口底部曾把第二个全局快捷键 Space+P 写成通用入口，而它在好查经自己是活动 App 时无效。</td><td>该快捷键连同权限流程已整体移除。两处现在只写 <kbd>⌥Space</kbd>：<span class="ui">打开搜索  (⌥Space)</span> 和 <span class="ui">⌥Space 呼出搜索 · ⏎ 打开 · ⇧⏎ / ⌘D 新窗口 · ⌘⏎ 复制</span>，与行为一致。</td><td><code>installStatusItem</code>，<code>AboutWindow.swift</code></td></tr>
-<tr><td class="n">A5</td><td>搜索窗口底栏：<span class="ui">↑↓ 选择    ⏎ 打开    ⇧⏎ 新窗口打开    ⌘⏎ 复制经文    esc 隐藏</span>（输入框有字时最后一项是 <span class="ui">esc 清空</span>）。</td><td>还支持 <kbd>⌃N</kbd> <kbd>⌃P</kbd>、<kbd>⌘D</kbd>、<kbd>⌘W</kbd>，以及「单击已选中的行即打开」，底栏都没提。属于遗漏，不算矛盾。</td><td><code>SearchView.swift</code>，<code>SearchWindow.installKeyMonitor</code></td></tr>
+<tr><td class="n">A5</td><td>搜索窗口底栏：<span class="ui">↑</span> <span class="ui">↓ 选择</span> <span class="ui">← 上一章</span> <span class="ui">→ 下一章</span> <span class="ui">⏎ 打开</span> <span class="ui">⇧⏎ 新窗口打开</span> <span class="ui">⌘⏎ 复制经文</span> <span class="ui">esc 隐藏</span>（输入框有字时最后一项是 <span class="ui">esc 清空</span>），每一项都是可点的按钮。</td><td>还支持 <kbd>⌃N</kbd> <kbd>⌃P</kbd>、<kbd>⌘D</kbd>、<kbd>⌘W</kbd>，以及「单击已选中的行即打开」和「预览里可以用鼠标选经节」，底栏都没提；「要移动光标请用 ⌘← ⌘→」也只写在 README 里。属于遗漏，不算矛盾。</td><td><code>SearchView.swift</code>，<code>SearchWindow.installKeyMonitor</code></td></tr>
 <tr><td class="n">A6</td><td>无结果时的说明只讲拼音规则：<span class="ui">拼音只按字首/音节前缀精确匹配（不做模糊匹配）…</span></td><td>同一个状态也由数字格式错误（<code>yh 4:24:</code>）和章节越界（<code>yhfy 4:99</code>）触发，这两种情况下这句说明对不上原因。</td><td><code>SearchView.emptyState</code>，<code>SearchEngine.search</code></td></tr>
 <tr><td class="n">A7</td><td>README：阅读窗口「右上角 ⧉ 按钮」。</td><td>⧉ 在标题栏下方工具行的右数第二个，最右边是「下一章」›。</td><td><code>ReaderView</code></td></tr>
 <tr><td class="n">A8</td><td>（已修复）源码注释称搜索界面为 floating search bar / panel，而当时它是一个普通的 <code>NSWindow</code>。</td><td>现在又是面板了：<code>SearchPanel</code>（<code>NSPanel</code> + <code>.nonactivatingPanel</code>），只是穿着主窗口的外衣（标题栏、关闭按钮、可缩放、列在「窗口」菜单里，<code>hidesOnDeactivate = false</code>）；<code>SearchWindow.swift</code> 顶部注释写的就是这个模型。只有作为浮层时才是 <code>.floating</code> 层级，<code>SearchViewModel.swift</code> 里那句 floating search bar 大体说得通。</td><td><code>SearchViewModel.swift</code>，<code>SearchEngine.swift</code></td></tr>
@@ -611,14 +621,17 @@ footer p{margin:4px 0}
 <div class="tablewrap"><table>
 <tr><th>#</th><th>现象</th><th>原因</th><th>程度</th></tr>
 <tr><td class="n">B1</td><td>（主要情形已修复）收起搜索窗口后焦点不回到原来的 App。别的 App 在前台时用 <kbd>⌥Space</kbd> 或菜单栏图标呼出的是不激活 App 的浮层，收起后焦点自己回到下面那个 App，<kbd>⌘⏎</kbd> 之后可以直接 <kbd>⌘V</kbd>。余下的只有好查经本来就是活动 App 的情形（刚启动、点了 Dock 图标、正在阅读窗口里）：这时收起搜索，前台仍是好查经。</td><td>搜索窗口改成了 <code>.nonactivatingPanel</code>，热键路径的 <code>show()</code> 不调 <code>NSApp.activate</code>，<code>isFrontmost</code> 也不再要求 <code>NSApp.isActive</code>。<code>hide()</code> 仍只是 <code>orderOut</code>，不会替用户切回上一个 App。</td><td><span class="sev">已修复 · 余下为低</span></td></tr>
-<tr><td class="n">B2</td><td>用中文输入法打「约翰福音」时，选字的 <kbd>↑</kbd> <kbd>↓</kbd>、上屏的 <kbd>⏎</kbd>、取消的 <kbd>esc</kbd> 可能被搜索窗口抢走（移动选中项 / 打开经文 / 清空输入或收起窗口）。</td><td><code>installKeyMonitor</code> 的本地监听先于输入法拿到按键，且没有检查输入框是否有未上屏的候选文字。</td><td><span class="sev hi">高</span></td></tr>
+<tr><td class="n">B2</td><td>（已修复）用中文输入法打「约翰福音」时，选字的 <kbd>↑</kbd> <kbd>↓</kbd>、上屏的 <kbd>⏎</kbd>、取消的 <kbd>esc</kbd> 被搜索窗口抢走（移动选中项 / 打开经文 / 清空输入或收起窗口）。</td><td>原因是本地监听先于输入法拿到按键，又不看输入框有没有未上屏的文字。现在 <code>installKeyMonitor</code> 在分派之前先检查：第一响应者是 <code>NSTextView</code> 且 <code>hasMarkedText()</code> 为真（输入法正在组字）就 <code>return event</code>，esc、方向键、<kbd>⏎</kbd> 全部原样交给输入法。</td><td><span class="sev">已修复</span></td></tr>
 <tr><td class="n">B3</td><td>复制成功没有任何反馈，窗口只是消失。</td><td><code>copySelected</code> 写完剪贴板就 <code>hide()</code>（查询留着）。</td><td><span class="sev">中</span></td></tr>
 <tr><td class="n">B4</td><td><kbd>⏎</kbd> 会覆盖最前阅读窗口里正在读的经文，没有后退；翻章到卷末不能进下一卷。</td><td><code>ReaderWindows.open</code> 直接改 <code>model.passage</code>；<code>ReaderModel.step</code> 限定在本卷。</td><td><span class="sev">中</span></td></tr>
 <tr><td class="n">B5</td><td>节段写反（<code>yhfy 4:24-20</code>）不报错，被当成单节 4:24。</td><td><code>Passage.verseRange</code> 取 <code>max(v, verseEnd)</code>，标题也只在 <code>e &gt; v</code> 时才显示节尾。</td><td><span class="sev">低</span></td></tr>
-<tr><td class="n">B6</td><td><kbd>⌘↑</kbd>、<kbd>⌥↓</kbd> 这类带修饰键的方向键也被当作移动选中项，输入框里的光标跳转失效。</td><td>监听里 keyCode 125 / 126 两个分支不看修饰键。</td><td><span class="sev">低</span></td></tr>
+<tr><td class="n">B6</td><td>（已按现在的监听复核）只对上下方向键成立：<kbd>⌘↑</kbd>、<kbd>⌥↓</kbd>、<kbd>⇧↑</kbd> 这类带修饰键的 <kbd>↑</kbd> <kbd>↓</kbd> 仍被当作移动选中项，输入框里「光标到行首 / 行末、选到行首」这几种按法失效。左右方向键没有这个问题：带任一修饰键的 <kbd>←</kbd> <kbd>→</kbd> 不拦截。</td><td>监听里 keyCode 125 / 126 两个分支不看修饰键；123 / 124 两个分支带 <code>where flags.isDisjoint(with: [.command, .option, .shift, .control])</code>。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B7</td><td>阅读窗口的大小和位置不跨启动保存；搜索窗口虽然设了 <code>setFrameAutosaveName("ChaJingSearch")</code>，但每次从隐藏状态呼出都会重新居中，实际只有尺寸被记住。</td><td><code>ReaderWindows.lastSize</code> 只在内存里；<code>show()</code> 调 <code>centerOnActiveScreen()</code>。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B8</td><td>（已不适用）快捷键开关菜单项的标题会不会与实际状态不符。</td><td>那个菜单项连同权限流程已移除，两个菜单里的标题现在都是固定文字。</td><td><span class="sev">已不适用</span></td></tr>
 <tr><td class="n">B9</td><td>用 <kbd>⌥Space</kbd>、<kbd>⌘W</kbd>、<kbd>⌘Q</kbd> 收起，或 <kbd>⌘⏎</kbd> 复制之后，留下的查询没有期限。隔一小时再呼出，看到的还是上次的结果和预览；文字是全选的，直接打字不受影响，但这时想按 <kbd>esc</kbd> 收起，第一下只会清空。另外，只想看一眼预览就走的人没有「一下收起并清空」的按法。对「复制一处、贴好、回来复制下一处」来说，留着正是想要的，所以代价不大。</td><td><code>hide()</code> 默认保留 <code>model.query</code>，<code>show()</code> 不看距离上次收起过了多久；<code>escape()</code> 在有字时只清空。可以考虑收起超过几分钟后自动清空。</td><td><span class="sev">低</span></td></tr>
+<tr><td class="n">B10</td><td>有结果时，单按 <kbd>←</kbd> <kbd>→</kbd> 不再移动输入框里的光标，而是翻章并改写整个输入。打到一半想退回去改一个字母的人，会看到自己打的字被换成「书名 章:最后一节」；<kbd>⌥Space</kbd> 回来、文字全选时，习惯按 <kbd>→</kbd> 取消全选再接着改的人也一样。无匹配时 <kbd>←</kbd> <kbd>→</kbd> 又照常移动光标，同一个键两种意思。</td><td>监听在有选中结果时拦截不带修饰键的 123 / 124。要移动光标得用 <kbd>⌘←</kbd> <kbd>⌘→</kbd> <kbd>⌥←</kbd> <kbd>⌥→</kbd> 或鼠标，这一点只写在 README 里。翻章对读经的人顺手，这是它的代价；可以考虑只在光标位于行末（或文字全选）时才翻章。</td><td><span class="sev">中</span></td></tr>
+<tr><td class="n">B11</td><td>用鼠标选经节或翻章之后，自己打的缩写（<code>yhfy 1:1</code>）被换成中文全名（<span class="ui">约翰福音 1:1-2</span>）。之后想手改章节，面对的不是自己打的那串字；如果当时选中的是第二条结果，改写后列表也只剩这一卷。</td><td><code>selectVerses</code> / <code>stepChapter</code> 用 <code>r.book.name</code> 重写 <code>query</code>。这是有意的：<code>yh</code> 这类缩写对应几卷书，不写全名翻章时可能换书。呼出时文字全选，重打缩写只要几个键。</td><td><span class="sev">低</span></td></tr>
+<tr><td class="n">B12</td><td>预览里可以用鼠标选经节，但界面上没有任何提示：经文行没有悬停外观，鼠标指针不变，底栏也没有对应的一项。</td><td><code>PassageView</code> 的 <code>selectionGesture</code> 是一个 <code>minimumDistance: 0</code> 的 <code>DragGesture</code>，没有配套的 <code>.help</code> 或光标。功能只写在 README 里。</td><td><span class="sev">低</span></td></tr>
 </table></div>
 </section>
 

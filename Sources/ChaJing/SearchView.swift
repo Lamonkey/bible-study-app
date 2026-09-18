@@ -226,6 +226,9 @@ struct PassageView: View {
 
     @State private var verseFrames: [Int: CGRect] = [:]
     @State private var dragAnchor: Int?
+    /// A scroll that was requested before the new verses were laid out. `scrollTo` is a
+    /// silent no-op in that case, so it is repeated once the verse frames arrive.
+    @State private var pendingScroll: ScrollRequest?
 
     private static let headingID = -1
 
@@ -252,20 +255,31 @@ struct PassageView: View {
                         }
                     }
                     .coordinateSpace(name: "verses")
-                    .onPreferenceChange(VerseFramesKey.self) { verseFrames = $0 }
+                    .onPreferenceChange(VerseFramesKey.self) { frames in
+                        verseFrames = frames
+                        if let request = pendingScroll, !frames.isEmpty {
+                            pendingScroll = nil
+                            Self.scroll(proxy, to: request)
+                        }
+                    }
                     .contentShape(Rectangle())
                     .gesture(selectionGesture, including: onSelect == nil ? .none : .all)
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .onAppear { Self.scroll(proxy, to: ScrollRequest(passage: p, intent: scroll)) }
+                .onAppear { request(ScrollRequest(passage: p, intent: scroll), proxy) }
                 // Use the NEW value handed to the closure: the closure itself still sees
                 // the previous render's properties, which would scroll to the old verse.
-                .onChange(of: ScrollRequest(passage: p, intent: scroll)) { Self.scroll(proxy, to: $0) }
+                .onChange(of: ScrollRequest(passage: p, intent: scroll)) { request($0, proxy) }
             }
         } else {
             Color.clear
         }
+    }
+
+    private func request(_ r: ScrollRequest, _ proxy: ScrollViewProxy) {
+        pendingScroll = r.intent == .stay ? nil : r
+        Self.scroll(proxy, to: r)
     }
 
     private struct ScrollRequest: Equatable {
