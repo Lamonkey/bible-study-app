@@ -1,11 +1,8 @@
 import AppKit
 
-final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, NSMenuDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation {
     private var statusItem: NSStatusItem!
     private var hotkey: GlobalHotkey?
-    private var chord: SpaceChordMonitor?
-    private var chordMenuItems: [NSMenuItem] = []
-    private var permissionTimer: Timer?
     /// Set only by the explicit 退出 commands; every other quit request just hides windows.
     private var reallyQuit = false
 
@@ -14,22 +11,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         NSApp.mainMenu = buildMainMenu()
         installStatusItem()
 
-        // Always-available hotkey: Option + Space.
+        // The global hotkey: Option + Space. Carbon hotkeys need no permission.
         hotkey = GlobalHotkey { [weak self] in self?.toggleSearch() }
         hotkey?.register()
-
-        // Requested chord: hold Space, press P.
-        chord = SpaceChordMonitor { [weak self] in self?.toggleSearch() }
-        if !(chord?.start() ?? false) {
-            SpaceChordMonitor.requestPermission()
-            waitForPermission()
-        }
-        updateChordMenu()
 
         SearchWindowController.shared.show(activate: true)
     }
 
-    /// The hotkeys only matter while the app is running, so keep running with no windows.
+    /// The hotkey only matters while the app is running, so keep running with no windows.
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
 
     /// Only 退出 in the menu-bar icon / app menu really quits. ⌘Q or "退出" from the Dock
@@ -62,16 +51,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         statusItem.button?.image?.isTemplate = true
 
         let menu = NSMenu()
-        menu.addItem(withTitle: "打开搜索  (⌥Space / Space+P)", action: #selector(showSearch), keyEquivalent: "")
-        menu.addItem(.separator())
-        let chordItem = NSMenuItem(title: "", action: #selector(toggleChord), keyEquivalent: "")
-        chordMenuItems.append(chordItem)
-        menu.addItem(chordItem)
+        menu.addItem(withTitle: "打开搜索  (⌥Space)", action: #selector(showSearch), keyEquivalent: "")
         menu.addItem(.separator())
         menu.addItem(withTitle: "关于好查经", action: #selector(about), keyEquivalent: "")
         menu.addItem(withTitle: "退出好查经", action: #selector(quit), keyEquivalent: "")
         menu.items.forEach { $0.target = self }
-        menu.delegate = self
         statusItem.menu = menu
     }
 
@@ -89,11 +73,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         let appMenu = NSMenu()
         appMenu.addItem(withTitle: "关于好查经", action: #selector(about), keyEquivalent: "").target = self
         appMenu.addItem(.separator())
-        let chordItem = NSMenuItem(title: "", action: #selector(toggleChord), keyEquivalent: "")
-        chordItem.target = self
-        chordMenuItems.append(chordItem)
-        appMenu.addItem(chordItem)
-        appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "隐藏好查经", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         let hideOthers = appMenu.addItem(withTitle: "隐藏其他", action: #selector(NSApplication.hideOtherApplications(_:)), keyEquivalent: "h")
         hideOthers.keyEquivalentModifierMask = [.command, .option]
@@ -101,7 +80,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         appMenu.addItem(.separator())
         appMenu.addItem(withTitle: "关闭所有窗口（保留后台）", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         appMenu.addItem(withTitle: "退出好查经", action: #selector(quit), keyEquivalent: "").target = self
-        appMenu.delegate = self
         main.addItem(submenu(appMenu, title: "好查经"))
 
         let file = NSMenu(title: "文件")
@@ -139,37 +117,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         return item
     }
 
-    /// The item is named after what clicking it does, in each of its three states.
-    private func updateChordMenu() {
-        let title: String
-        if chord?.isRunning ?? false {
-            title = "停用 Space+P 快捷键"
-        } else if SpaceChordMonitor.isTrusted {
-            title = "启用 Space+P 快捷键"
-        } else {
-            title = "开启 Space+P 快捷键（需授权辅助功能）…"
-        }
-        chordMenuItems.forEach { $0.title = title }
-    }
-
-    /// Permission can change while the app runs, so re-read the state whenever a menu opens.
-    func menuNeedsUpdate(_ menu: NSMenu) {
-        updateChordMenu()
-    }
-
-    /// Poll until the user grants Accessibility, then start the tap by itself.
-    private func waitForPermission() {
-        guard permissionTimer == nil else { return }
-        permissionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self] t in
-            guard let self else { t.invalidate(); return }
-            if self.chord?.start() ?? false {
-                t.invalidate()
-                self.permissionTimer = nil
-                self.updateChordMenu()
-            }
-        }
-    }
-
     // MARK: - Actions
 
     private func toggleSearch() {
@@ -201,30 +148,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuItemValidation, 
         return true
     }
 
-    @objc private func toggleChord() {
-        guard let chord else { return }
-        if chord.isRunning {
-            chord.stop()
-        } else if !chord.start() {
-            // No Accessibility permission yet: take the user straight to where it is granted.
-            // The system prompt only ever appears once, so also open the pane itself, and
-            // keep polling so the chord switches on the moment the box is ticked.
-            SpaceChordMonitor.requestPermission()
-            openAccessibilitySettings()
-            waitForPermission()
-        }
-        updateChordMenu()
-    }
-
     @objc private func quit() {
         reallyQuit = true
         NSApp.terminate(nil)
-    }
-
-    private func openAccessibilitySettings() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-            NSWorkspace.shared.open(url)
-        }
     }
 
     @objc private func about() {

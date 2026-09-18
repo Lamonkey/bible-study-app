@@ -1,6 +1,6 @@
 #!/bin/bash
 # Tart macOS VM helper: run and test the app in a guest so its global hotkeys
-# (⌥Space, Space+P) never touch the host. Build happens on the host; the VM only runs it.
+# (⌥Space) never touch the host. Build happens on the host; the VM only runs it.
 #
 #   scripts/vm.sh setup    clone the image, size the VM, install an SSH key (one-off)
 #   scripts/vm.sh start    boot the VM in the background with the repo mounted

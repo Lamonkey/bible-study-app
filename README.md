@@ -1,5 +1,7 @@
 # 好查经 ChaJing — macOS 原生经文快速检索
 
+[English](README.en.md) · Bible Study App: a native macOS Bible verse lookup tool for Chinese readers (Chinese Union Version, pinyin-initial search, global hotkey).
+
 <p align="center"><img src="packaging/icon-source.png" width="160" alt="好查经图标"></p>
 
 > 在学习主的话语、参加查经小组时，我时常需要翻阅圣经的不同章节。对于圣经书卷名字还不熟悉的我，
@@ -8,7 +10,7 @@
 
 ![搜索窗口](docs/ui/shots/search-result-verse.light.png)
 
-macOS 应用，有 Dock 图标、主菜单和一个菜单栏图标。读经、查经时打开它，全局快捷键即生效；
+macOS 应用，有 Dock 图标、主菜单和一个菜单栏图标。读经、查经时打开它，全局快捷键 ⌥Space 即生效；
 按快捷键弹出主窗口的输入条，用**拼音首字母 / 拼音 / 中文书名 + 章:节**
 精确定位简体和合本经文，回车打开阅读窗口，⌘回车复制经文。阅读窗口可以开任意多个，
 方便同时对照几处经文。
@@ -37,13 +39,8 @@ linqian 13       中文简称的完整拼音，同样按前缀逐音节匹配
 
 | 快捷键 | 说明 |
 | --- | --- |
-| **按住 Space 再按 P** | 你要的组合键。系统级生效，需要「辅助功能」权限（首次启动会弹提示）。好查经自己在前台时不拦截。 |
-| **⌥ Space** | 无需任何权限的备用快捷键，始终可用；再按一次收起搜索窗口。在别的 app（包括全屏 app）里按，搜索窗口直接浮在它上面，不切换桌面；esc / ⌘⏎ 之后焦点回到原来的 app。 |
+| **⌥ Space** | 全局快捷键，不需要任何系统权限；再按一次收起搜索窗口。在别的 app（包括全屏 app）里按，搜索窗口直接浮在它上面，不切换桌面；esc / ⌘⏎ 之后焦点回到原来的 app。 |
 | **⌘F** | 好查经在前台时（例如正在阅读窗口里）呼出搜索。点 Dock 图标、菜单栏图标或菜单「文件 → 搜索经文」也可以。 |
-
-Space+P 的实现：Space 是普通输入键，所以 app 用事件 tap 把 Space 按下先"扣住"最多 0.35 秒；
-这段时间内按了 P 就弹出搜索（Space 和 P 都不会传给前台 app），
-否则原样补发 Space 给前台 app，正常打字不受影响。ChaJing 自己处于前台、或搜索窗口正在接收键盘输入时不拦截。
 
 搜索窗口内：`↑ ↓`（或 `⌃N ⌃P`）选择，`⏎` 在最前面的阅读窗口里打开（没有则新建），
 `⇧⏎` 或 `⌘D` 在新阅读窗口里打开，`⌘⏎` 复制所选经文到剪贴板，`esc` / `⌘W` 隐藏。
@@ -62,8 +59,7 @@ make install     # 拷贝到 /Applications
 
 也可以 `open Package.swift` 用 Xcode 打开直接运行（scheme: ChaJing）。
 
-首次运行 Space+P：系统弹出辅助功能提示 → 系统设置 → 隐私与安全性 → 辅助功能 → 打开 好查经。
-`make app` 使用 ad-hoc 签名，每次重新构建后权限可能需要重新勾选一次（把旧条目删掉再加）。
+应用不需要任何系统权限（不用「辅助功能」，不联网）。
 
 ## 经文数据
 
@@ -99,7 +95,7 @@ make install     # 拷贝到 /Applications
 ```
 Sources/ChaJing/
   main.swift              NSApplication 启动（普通 app，有 Dock 图标和主菜单）
-  AppDelegate.swift       主菜单、菜单栏图标、后台驻留、注册两种快捷键、权限轮询
+  AppDelegate.swift       主菜单、菜单栏图标、后台驻留、注册全局快捷键
   QueryParser.swift       "yhfy 4:24-26" -> 书名部分 + 章/节/节尾
   BookMatcher.swift       拼音音节/通配符/中文精确匹配（无模糊）
   SearchEngine.swift      组合解析与匹配，按章节存在性过滤
@@ -110,7 +106,6 @@ Sources/ChaJing/
   AboutWindow.swift       「关于」窗口
   UIRegion.swift          给界面部件命名，供离屏截图导出坐标（运行时无作用）
   GlobalHotkey.swift      Carbon 全局热键 ⌥Space
-  SpaceChordMonitor.swift CGEventTap 实现的 Space+P 组合键
 Tests/ChaJingTests/       XCTest；UISnapshotTests 离屏渲染界面截图（make ui-shots）
 scripts/                  数据抓取/构建脚本、Python 参考实现、图标生成、虚拟机测试脚本
 packaging/                Info.plist、图标原图与 AppIcon.icns

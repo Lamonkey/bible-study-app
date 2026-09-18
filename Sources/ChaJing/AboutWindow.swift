@@ -61,7 +61,7 @@ struct AboutView: View {
             Spacer(minLength: 12)
 
             VStack(spacing: 3) {
-                Text("⌥Space 或按住 Space 再按 P 呼出搜索 · ⏎ 打开 · ⇧⏎ / ⌘D 新窗口 · ⌘⏎ 复制")
+                Text("⌥Space 呼出搜索 · ⏎ 打开 · ⇧⏎ / ⌘D 新窗口 · ⌘⏎ 复制")
                 Text("经文：和合本（公共领域），繁转简由 OpenCC 完成")
             }
             .font(.system(size: 11))
