@@ -4,15 +4,25 @@ import SwiftUI
 
 final class ReaderModel: ObservableObject {
     @Published var passage: Passage
+    /// Going back a chapter shows its end (the reader is moving upwards through the text);
+    /// everything else starts at the top.
+    private(set) var scroll: PreviewScroll = .top
 
     init(passage: Passage) { self.passage = passage }
 
     var book: Book? { BibleStore.shared.book(id: passage.bookID) }
 
+    /// Show a different passage in this window, positioned at its verse.
+    func show(_ newPassage: Passage) {
+        scroll = .top
+        passage = newPassage
+    }
+
     func step(_ delta: Int) {
         guard let b = book else { return }
         let c = passage.chapter + delta
         guard c >= 1, c <= b.chapterCount else { return }
+        scroll = delta < 0 ? .bottom : .top
         passage = Passage(bookID: b.id, chapter: c, verse: nil, verseEnd: nil)
     }
 }
@@ -46,7 +56,7 @@ struct ReaderView: View {
             .padding(.vertical, 8)
             .uiRegion("reader.toolbar")
             Divider()
-            PassageView(passage: model.passage, highlight: model.passage.verseRange)
+            PassageView(passage: model.passage, highlight: model.passage.verseRange, scroll: model.scroll)
                 .uiRegion("reader.passage")
         }
         .frame(minWidth: 480, minHeight: 360)
@@ -106,7 +116,7 @@ final class ReaderWindows {
     /// (or when none is open yet).
     func open(_ passage: Passage, inNewWindow: Bool) {
         if !inNewWindow, let c = frontmost {
-            c.model.passage = passage
+            c.model.show(passage)
             c.showWindow(nil)
             c.window?.makeKeyAndOrderFront(nil)
         } else {

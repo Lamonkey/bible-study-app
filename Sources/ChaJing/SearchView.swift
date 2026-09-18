@@ -33,7 +33,8 @@ struct SearchView: View {
                         .frame(width: 250)
                         .uiRegion("search.resultList")
                     Divider()
-                    PassageView(passage: model.selected?.passage, highlight: model.selected?.passage.verseRange)
+                    PassageView(passage: model.selected?.passage, highlight: model.selected?.passage.verseRange,
+                                scroll: model.previewScroll, onSelect: { model.selectVerses($0) })
                         .uiRegion("search.preview")
                 }
             }
@@ -48,6 +49,12 @@ struct SearchView: View {
                 HintButton(keys: "↓", label: "选择", help: "下一条结果") { model.moveSelection(by: 1) }
                     .disabled(model.results.count < 2)
                     .uiRegion("search.footer.down")
+                HintButton(keys: "←", label: "上一章", help: "上一章，落在最后一节，方便接着往上读") { model.stepChapter(-1) }
+                    .disabled(!model.canStepChapter(-1))
+                    .uiRegion("search.footer.prevChapter")
+                HintButton(keys: "→", label: "下一章", help: "下一章，从第 1 节开始") { model.stepChapter(1) }
+                    .disabled(!model.canStepChapter(1))
+                    .uiRegion("search.footer.nextChapter")
                 HintButton(keys: "⏎", label: "打开", help: "在阅读窗口中打开所选经文") { model.openSelected() }
                     .disabled(model.selected == nil)
                     .uiRegion("search.footer.open")
@@ -69,6 +76,8 @@ struct SearchView: View {
                 Text("简体和合本")
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .fixedSize()
                     .uiRegion("search.footer.version")
             }
             .padding(.horizontal, 8)
@@ -192,10 +201,33 @@ struct ResultRow: View {
     }
 }
 
+/// Where a passage view should put itself when its passage changes.
+enum PreviewScroll {
+    case top      // first highlighted verse (or the chapter heading) at the top
+    case bottom   // last highlighted verse (or the chapter's last verse) at the bottom
+    case stay     // leave the scroll position alone, e.g. while picking verses with the mouse
+}
+
+private struct VerseFramesKey: PreferenceKey {
+    static var defaultValue: [Int: CGRect] = [:]
+    static func reduce(value: inout [Int: CGRect], nextValue: () -> [Int: CGRect]) {
+        value.merge(nextValue()) { _, new in new }
+    }
+}
+
 /// A chapter's verses with an optional highlighted range, scrolled into view.
+/// With `onSelect`, verses can be picked with the mouse: click one, drag across several,
+/// or shift-click to extend the current range.
 struct PassageView: View {
     let passage: Passage?
     let highlight: ClosedRange<Int>?
+    var scroll: PreviewScroll = .top
+    var onSelect: ((ClosedRange<Int>) -> Void)? = nil
+
+    @State private var verseFrames: [Int: CGRect] = [:]
+    @State private var dragAnchor: Int?
+
+    private static let headingID = -1
 
     var body: some View {
         if let p = passage, let book = BibleStore.shared.book(id: p.bookID) {
@@ -208,28 +240,86 @@ struct PassageView: View {
                             .foregroundColor(.secondary)
                             .padding(.bottom, 4)
                             .uiRegion("passage.heading")
+                            .id(Self.headingID)
                         ForEach(Array(verses.enumerated()), id: \.offset) { i, v in
                             VerseLine(number: i + 1, text: v, highlighted: highlight?.contains(i + 1) ?? false)
                                 .uiRegion(highlight?.lowerBound == i + 1 ? "passage.verse.highlighted" : "passage.verse.\(i + 1)")
+                                .background(GeometryReader { geo in
+                                    Color.clear.preference(key: VerseFramesKey.self,
+                                                           value: [i + 1: geo.frame(in: .named("verses"))])
+                                })
                                 .id(i + 1)
                         }
                     }
+                    .coordinateSpace(name: "verses")
+                    .onPreferenceChange(VerseFramesKey.self) { verseFrames = $0 }
+                    .contentShape(Rectangle())
+                    .gesture(selectionGesture, including: onSelect == nil ? .none : .all)
                     .padding(14)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .onAppear { scroll(proxy) }
-                .onChange(of: p) { _ in scroll(proxy) }
+                .onAppear { Self.scroll(proxy, to: ScrollRequest(passage: p, intent: scroll)) }
+                // Use the NEW value handed to the closure: the closure itself still sees
+                // the previous render's properties, which would scroll to the old verse.
+                .onChange(of: ScrollRequest(passage: p, intent: scroll)) { Self.scroll(proxy, to: $0) }
             }
         } else {
             Color.clear
         }
     }
 
-    private func scroll(_ proxy: ScrollViewProxy) {
-        let target = highlight?.lowerBound ?? 1
-        DispatchQueue.main.async {
-            proxy.scrollTo(target, anchor: .top)
+    private struct ScrollRequest: Equatable {
+        let passage: Passage
+        let intent: PreviewScroll
+    }
+
+    private static func scroll(_ proxy: ScrollViewProxy, to request: ScrollRequest) {
+        let p = request.passage
+        let target: Int, anchor: UnitPoint
+        switch request.intent {
+        case .stay:
+            return
+        case .top:
+            // Verse 1 brings the chapter heading with it instead of pushing it off screen.
+            let verse = p.verseRange?.lowerBound ?? 1
+            target = verse <= 1 ? headingID : verse
+            anchor = .top
+        case .bottom:
+            let last = BibleStore.shared.book(id: p.bookID)?.verseCount(chapter: p.chapter) ?? 1
+            target = p.verseRange?.upperBound ?? max(last, 1)
+            anchor = .bottom
         }
+        DispatchQueue.main.async {
+            proxy.scrollTo(target, anchor: anchor)
+        }
+    }
+
+    // MARK: Picking verses with the mouse
+
+    private var selectionGesture: some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("verses"))
+            .onChanged { value in
+                guard let here = verse(at: value.location.y) else { return }
+                if dragAnchor == nil {
+                    // Shift-click extends the current range from its far end.
+                    if NSEvent.modifierFlags.contains(.shift), let h = highlight {
+                        dragAnchor = here <= h.lowerBound ? h.upperBound : h.lowerBound
+                    } else {
+                        dragAnchor = verse(at: value.startLocation.y) ?? here
+                    }
+                }
+                let anchor = dragAnchor ?? here
+                onSelect?(min(anchor, here)...max(anchor, here))
+            }
+            .onEnded { _ in dragAnchor = nil }
+    }
+
+    /// The verse under a y coordinate; points between or beyond verses snap to the nearest.
+    private func verse(at y: CGFloat) -> Int? {
+        if let hit = verseFrames.first(where: { $0.value.minY <= y && y <= $0.value.maxY }) { return hit.key }
+        return verseFrames.min { a, b in
+            min(abs(a.value.minY - y), abs(a.value.maxY - y)) < min(abs(b.value.minY - y), abs(b.value.maxY - y))
+        }?.key
     }
 }
 

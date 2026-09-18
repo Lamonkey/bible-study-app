@@ -100,7 +100,7 @@ final class SearchWindowController: NSWindowController, NSWindowDelegate {
         window.makeKeyAndOrderFront(nil)
         if activate { NSApp.activate(ignoringOtherApps: true) }
         model.focusToken += 1
-        // Coming back to an old query: select it, so typing replaces it and → keeps it.
+        // Coming back to an old query: select it, so typing replaces it.
         if !model.query.isEmpty {
             DispatchQueue.main.async { [weak window] in
                 (window?.firstResponder as? NSTextView)?.selectAll(nil)
@@ -145,9 +145,17 @@ final class SearchWindowController: NSWindowController, NSWindowDelegate {
         keyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             guard let self, let window = self.window, window.isKeyWindow else { return event }
             let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            // An input method is composing (picking pinyin candidates): every key is its.
+            if let editor = window.firstResponder as? NSTextView, editor.hasMarkedText() { return event }
             switch event.keyCode {
             case 53: // esc
                 self.escape(); return nil
+            // Plain ← / → page through chapters. With any modifier they stay text-editing
+            // keys, so ⌘← ⌥→ and shift-selection still work in the search field.
+            case 123 where flags.isDisjoint(with: [.command, .option, .shift, .control]) && self.model.selected != nil:
+                self.model.stepChapter(-1); return nil
+            case 124 where flags.isDisjoint(with: [.command, .option, .shift, .control]) && self.model.selected != nil:
+                self.model.stepChapter(1); return nil
             case 125: // down
                 self.model.moveSelection(by: 1); return nil
             case 126: // up

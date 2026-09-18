@@ -24,6 +24,8 @@ final class UISnapshotTests: XCTestCase {
 
     private enum Kind {
         case search(query: String, selectedIndex: Int)
+        /// A search state reached by paging chapters with ← / → after typing `query`.
+        case searchStep(query: String, delta: Int)
         case reader(Passage)
         case about
     }
@@ -43,6 +45,10 @@ final class UISnapshotTests: XCTestCase {
              description: "输入 lq 13:4-8 只命中哥林多前书 13:4-8 一条结果，右侧预览滚动到第 4 节并高亮第 4-8 节。"),
         Shot(name: "search-result-chapter", kind: .search(query: "约翰福音 1", selectedIndex: 0),
              description: "输入「约翰福音 1」：整章结果，没有高亮节；此时底部 esc 按钮显示「清空」。"),
+        Shot(name: "search-prev-chapter", kind: .searchStep(query: "约翰福音 2:3", delta: -1),
+             description: "输入「约翰福音 2:3」后按 ←：回到第 1 章，落在最后一节 1:51，高亮并显示在预览底部；输入框同步改写。"),
+        Shot(name: "search-next-chapter", kind: .searchStep(query: "约翰福音 2:3", delta: 1),
+             description: "输入「约翰福音 2:3」后按 →：进入第 3 章，落在第 1 节，章标题在预览顶部；输入框同步改写。"),
         Shot(name: "search-result-multi", kind: .search(query: "yh 3:16", selectedIndex: 0),
              description: "输入 yh 3:16 命中多卷书，左侧列出多条结果，默认选中第一条并在右侧预览。"),
         Shot(name: "search-result-multi-second", kind: .search(query: "yh 3:16", selectedIndex: 1),
@@ -90,6 +96,11 @@ final class UISnapshotTests: XCTestCase {
                 size = Self.searchSize
                 entry["view"] = "search"
                 entry["query"] = query
+            case .searchStep(let query, let delta):
+                size = Self.searchSize
+                entry["view"] = "search"
+                entry["query"] = query
+                entry["then"] = delta < 0 ? "←" : "→"
             case .reader(let passage):
                 size = Self.readerSize
                 entry["view"] = "reader"
@@ -167,6 +178,11 @@ final class UISnapshotTests: XCTestCase {
                 // so the list's and the preview's onChange handlers run.
                 afterFirstLayout = { model.selectedIndex = selectedIndex }
             }
+        case .searchStep(let query, let delta):
+            let model = SearchViewModel()
+            model.query = query
+            hosting = NSHostingView(rootView: probe(SearchView(model: model)))
+            afterFirstLayout = { model.stepChapter(delta) }
         case .reader(let passage):
             hosting = NSHostingView(rootView: probe(ReaderView(model: ReaderModel(passage: passage))))
         case .about:
