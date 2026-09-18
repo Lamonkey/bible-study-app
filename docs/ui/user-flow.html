@@ -124,14 +124,12 @@ footer p{margin:4px 0}
 
 <h3>目录</h3>
 <ol class="toc">
-<li><a href="#f1">首次启动与权限</a> <span>启动后发生什么，Space+P 怎样拿到权限</span></li>
-<li><a href="#f2">查一处经文并阅读</a> <span>四个入口 → 输入 → 选择 → 阅读窗口</span></li>
+<li><a href="#f1">首次启动</a> <span>启动后发生什么，哪些入口随之就位</span></li>
+<li><a href="#f2">查一处经文并阅读</a> <span>三个入口 → 输入 → 选择 → 阅读窗口</span></li>
 <li><a href="#f3">同时对照多处经文</a> <span>多开阅读窗口、复制窗口、翻章</span></li>
 <li><a href="#f4">复制经文</a> <span>⌘⏎ 写进剪贴板的确切内容</span></li>
 <li><a href="#f5">收起与退出</a> <span>哪些操作只是收起，哪些才真正退出</span></li>
-<li><a href="#f6">热键的切换语义</a> <span>同一个热键何时显示、何时收起、何时被忽略</span></li>
-<li><a href="#f7">手动停用 / 启用 Space+P</a> <span>菜单里的开关项</span></li>
-<li><a href="#f8">Space 键的判定</a> <span>0.35 秒窗口内 Space 怎样被扣住与补发</span></li>
+<li><a href="#f6">热键的切换语义</a> <span>同一个热键何时显示、何时收起</span></li>
 <li><a href="#issues">发现的不一致</a> <span>文档、界面提示与代码行为的出入，以及可能的 UI 问题</span></li>
 </ol>
 </header>
@@ -139,28 +137,17 @@ footer p{margin:4px 0}
 <main>
 
 <section>
-<h2 id="f1"><span class="num">流程 1</span>首次启动与权限</h2>
-<p class="goal">目标：打开 App 就能查经；Space+P 组合键需要「辅助功能」权限，授权过程不挡住搜索窗口，也不用重启。</p>
+<h2 id="f1"><span class="num">流程 1</span>首次启动</h2>
+<p class="goal">目标：打开 App 就能查经；没有任何授权步骤，启动完成时搜索窗口、菜单栏图标和全局热键 <kbd>⌥Space</kbd> 都已就位。</p>
 <div class="fig">
-<svg class="flow" viewBox="0 0 1000 856" role="img" aria-labelledby="svgt1" style="width:100%;max-width:1000px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
-<title id="svgt1">流程 1：首次启动与权限</title>
+<svg class="flow" viewBox="0 0 764 624" role="img" aria-labelledby="svgt1" style="width:100%;max-width:764px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
+<title id="svgt1">流程 1：首次启动</title>
 <defs><marker id="arw1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
 <g class="edges">
 <polyline class="edge" points="382,104 382,168" marker-end="url(#arw1)"/>
 <polyline class="edge" points="382,224 382,284" marker-end="url(#arw1)"/>
-<polyline class="edge" points="382,340 382,384" marker-end="url(#arw1)"/>
-<polyline class="edge" points="290,428 232,428" marker-end="url(#arw1)"/>
-<polyline class="edge" points="146,456 146,516" marker-end="url(#arw1)"/>
-<polyline class="edge" points="146,572 146,660 296,660" marker-end="url(#arw1)"/>
-<polyline class="edge" points="474,428 532,428" marker-end="url(#arw1)"/>
-<polyline class="edge" points="618,456 618,516" marker-end="url(#arw1)"/>
-<polyline class="edge" points="618,572 618,660 468,660" marker-end="url(#arw1)"/>
-<polyline class="edge" points="704,428 768,428" marker-end="url(#arw1)"/>
-<polyline class="edge" points="854,456 854,500" marker-end="url(#arw1)"/>
-<polyline class="edge" points="854,588 854,632" marker-end="url(#arw1)"/>
-<polyline class="edge" points="946,544 962,544 962,428 940,428" marker-end="url(#arw1)"/>
-<polyline class="edge" points="854,688 854,752" marker-end="url(#arw1)"/>
-<polyline class="edge" points="382,688 382,752" marker-end="url(#arw1)"/>
+<polyline class="edge" points="382,340 382,400" marker-end="url(#arw1)"/>
+<polyline class="edge" points="382,456 382,520" marker-end="url(#arw1)"/>
 </g><g class="nodes">
 <rect class="n-pill" x="296" y="56" width="172" height="48" rx="24"/>
 <text class="nt" x="382" y="84.68">启动好查经</text>
@@ -172,66 +159,19 @@ footer p{margin:4px 0}
 <path class="n-stripe" d="M303,284 V340 Q296,340 296,333 V291 Q296,284 303,284 Z"/>
 <text class="nt" x="385" y="308.18">注册全局热键 ⌥Space</text>
 <text class="nt" x="385" y="325.18">（无需权限）</text>
-<polygon class="n-dec" points="382,384 474,428 382,472 290,428"/>
-<text class="nt" x="382" y="424.18">辅助功能</text>
-<text class="nt" x="382" y="441.18">已授权？</text>
-<rect class="n-sys" x="60" y="400" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M67,400 V456 Q60,456 60,449 V407 Q60,400 67,400 Z"/>
-<text class="nt" x="149" y="432.68">Space+P 监听启动</text>
-<rect class="n-sys" x="51" y="516" width="190" height="56" rx="7"/>
-<path class="n-stripe" d="M58,516 V572 Q51,572 51,565 V523 Q51,516 58,516 Z"/>
-<text class="nt" x="149" y="540.18">菜单项显示</text>
-<text class="nt" x="149" y="557.18">「停用 Space+P 快捷键」</text>
-<rect class="n-sys" x="532" y="400" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M539,400 V456 Q532,456 532,449 V407 Q532,400 539,400 Z"/>
-<text class="nt" x="621" y="424.18">系统弹出</text>
-<text class="nt" x="621" y="441.18">辅助功能授权提示</text>
-<rect class="n-sys" x="523" y="516" width="190" height="56" rx="7"/>
-<path class="n-stripe" d="M530,516 V572 Q523,572 523,565 V523 Q523,516 530,516 Z"/>
-<text class="nt" x="621" y="540.18">菜单项显示</text>
-<text class="nt" x="621" y="557.18">「开启 Space+P 快捷键…」</text>
-<rect class="n-sys" x="296" y="632" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M303,632 V688 Q296,688 296,681 V639 Q296,632 303,632 Z"/>
-<text class="nt" x="385" y="656.18">显示搜索窗口</text>
-<text class="nt" x="385" y="673.18">光标落在输入框</text>
-<rect class="n-pill" x="296" y="752" width="172" height="48" rx="24"/>
-<text class="nt" x="382" y="780.68">等待输入 → 流程 2</text>
-<rect class="n-sys" x="768" y="400" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M775,400 V456 Q768,456 768,449 V407 Q768,400 775,400 Z"/>
-<text class="nt" x="857" y="424.18">后台每 2 秒</text>
-<text class="nt" x="857" y="441.18">重试启动监听</text>
-<polygon class="n-dec" points="854,500 946,544 854,588 762,544"/>
-<text class="nt" x="854" y="540.18">用户已勾选</text>
-<text class="nt" x="854" y="557.18">好查经？</text>
-<rect class="n-sys" x="768" y="632" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M775,632 V688 Q768,688 768,681 V639 Q768,632 775,632 Z"/>
-<text class="nt" x="857" y="656.18">监听启动</text>
-<text class="nt" x="857" y="673.18">停止轮询</text>
-<rect class="n-pill" x="768" y="752" width="172" height="48" rx="24"/>
-<text class="nt" x="854" y="780.68">菜单项变为「停用…」</text>
+<rect class="n-sys" x="296" y="400" width="172" height="56" rx="7"/>
+<path class="n-stripe" d="M303,400 V456 Q296,456 296,449 V407 Q296,400 303,400 Z"/>
+<text class="nt" x="385" y="424.18">显示搜索窗口</text>
+<text class="nt" x="385" y="441.18">光标落在输入框</text>
+<rect class="n-pill" x="296" y="520" width="172" height="48" rx="24"/>
+<text class="nt" x="382" y="548.68">等待输入 → 流程 2</text>
 </g><g class="labels">
-<text class="el" x="265.5" y="422" text-anchor="middle">是</text>
-<text class="el" x="498.5" y="422" text-anchor="middle">否</text>
-<text class="el" x="731.5" y="422" text-anchor="middle">同时</text>
-<text class="el" x="861" y="606" text-anchor="start">是</text>
-<text class="el" x="955" y="508" text-anchor="end">否</text>
 </g></svg>
 </div>
 <ul class="notes">
-<li>启动顺序在 <code>AppDelegate.applicationDidFinishLaunching</code>：预载经文 → 主菜单 → 菜单栏图标（SF Symbol <code>book.closed</code>）→ 注册 <kbd>⌥Space</kbd> → 尝试启动 Space+P → 刷新菜单标题 → 显示搜索窗口。无论是否授权，搜索窗口都会立刻出现，轮询在后台进行。</li>
-<li><kbd>⌥Space</kbd> 用 Carbon <code>RegisterEventHotKey</code>（<code>GlobalHotkey.swift</code>），不需要任何权限。<code>register()</code> 的返回值被丢弃，热键被别的 App 占用时没有任何提示。</li>
-<li>未授权时调用 <code>SpaceChordMonitor.requestPermission()</code> 弹出系统提示，同时起一个 2 秒一次的 <code>Timer</code> 反复调用 <code>chord.start()</code>；用户在「系统设置 → 隐私与安全性 → 辅助功能」勾选好查经后，最多 2 秒监听就启动，定时器停止，菜单标题随之改变。启动时只弹系统提示，不会自己打开系统设置；如果用户当时点了「拒绝」，之后从菜单里那一项再进来（见下表和<a href="#f7">流程 7</a>）。</li>
-<li>这个菜单项同时出现在菜单栏图标菜单和「好查经」菜单里，标题有三种（<code>updateChordMenu()</code>）：</li>
-</ul>
-<div class="tablewrap"><table>
-<tr><th>条件</th><th>菜单项标题</th><th>点击后</th></tr>
-<tr><td>监听正在运行</td><td><span class="ui">停用 Space+P 快捷键</span></td><td>停止监听</td></tr>
-<tr><td>已授权，但监听没在运行</td><td><span class="ui">启用 Space+P 快捷键</span></td><td>启动监听</td></tr>
-<tr><td>未授权</td><td><span class="ui">开启 Space+P 快捷键（需授权辅助功能）…</span></td><td>帮用户把它开起来：调用系统授权提示（系统只会弹一次），直接打开「系统设置 → 隐私与安全性 → 辅助功能」，并（重新）开始 2 秒一次的轮询，勾选后自动启动监听</td></tr>
-</table></div>
-<ul class="notes">
-<li>标题写的是「点了会怎样」，不是当前状态。它在启动时、轮询成功时、用户点击该菜单项时刷新，另外两个菜单每次打开都会经 <code>menuNeedsUpdate</code> 重新判断一次，启动后才授予或撤销权限，标题也不会错。菜单里没有单独通向系统设置的项，这件事由未授权状态下的这一项来做（<code>openAccessibilitySettings()</code>）。</li>
-<li>同在这两个菜单里的 <span class="ui">关于好查经</span> 打开一个独立的非模态窗口（<code>AboutWindow.swift</code>，440×500）：图标、<span class="ui">好查经</span>、版本行、作者写的 <span class="ui">为什么做这个</span>、<span class="ui">作者</span> <span class="ui">github.com/Lamonkey</span>（点击后在浏览器打开 <code>https://github.com/Lamonkey</code>），底部两行小字是快捷键和经文来源。窗口里没有按钮，用红色关闭按钮或 <kbd>⌘W</kbd> 关闭，开着的时候其他窗口照常可用，不另画流程。</li>
+<li>启动顺序在 <code>AppDelegate.applicationDidFinishLaunching</code>：预载经文 → 主菜单 → 菜单栏图标（SF Symbol <code>book.closed</code>）→ 注册 <kbd>⌥Space</kbd> → 显示搜索窗口（并激活 App）。整个过程不请求任何系统权限，没有弹窗，也没有后台轮询。</li>
+<li><kbd>⌥Space</kbd> 用 Carbon <code>RegisterEventHotKey</code>（<code>GlobalHotkey.swift</code>），不需要任何权限。<code>register()</code> 的返回值被丢弃，热键被别的 App 占用时没有任何提示。它现在是唯一的全局热键，注册失败就只剩 Dock 图标和菜单栏图标两条路，见文末 A3。</li>
+<li>菜单栏图标菜单和「好查经」菜单里都有的 <span class="ui">关于好查经</span> 打开一个独立的非模态窗口（<code>AboutWindow.swift</code>，440×500）：图标、<span class="ui">好查经</span>、版本行、作者写的 <span class="ui">为什么做这个</span>、<span class="ui">作者</span> <span class="ui">github.com/Lamonkey</span>（点击后在浏览器打开 <code>https://github.com/Lamonkey</code>），底部两行小字是快捷键和经文来源。窗口里没有按钮，用红色关闭按钮或 <kbd>⌘W</kbd> 关闭，开着的时候其他窗口照常可用，不另画流程。</li>
 </ul>
 </section>
 
@@ -243,7 +183,6 @@ footer p{margin:4px 0}
 <title id="svgt2">流程 2：查一处经文并阅读</title>
 <defs><marker id="arw2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
 <g class="edges">
-<polyline class="edge" points="146,108 146,128 382,128 382,168" marker-end="url(#arw2)"/>
 <polyline class="edge" points="382,108 382,168" marker-end="url(#arw2)"/>
 <polyline class="edge" points="618,108 618,128 382,128 382,168" marker-end="url(#arw2)"/>
 <polyline class="edge" points="854,108 854,128 382,128 382,168" marker-end="url(#arw2)"/>
@@ -266,12 +205,9 @@ footer p{margin:4px 0}
 <polyline class="edge" points="768,1008 704,1008" marker-end="url(#arw2)"/>
 <polyline class="edge" points="532,1008 468,1008" marker-end="url(#arw2)"/>
 </g><g class="nodes">
-<rect class="n-act" x="60" y="52" width="172" height="56" rx="7"/>
-<text class="nt" x="146" y="76.18">按 ⌥Space</text>
-<text class="nt" x="146" y="93.18">（任何 App 中）</text>
 <rect class="n-act" x="296" y="52" width="172" height="56" rx="7"/>
-<text class="nt" x="382" y="76.18">按住 Space 再按 P</text>
-<text class="nt" x="382" y="93.18">（别的 App 在前台）</text>
+<text class="nt" x="382" y="76.18">按 ⌥Space</text>
+<text class="nt" x="382" y="93.18">（任何 App 中）</text>
 <rect class="n-act" x="532" y="52" width="172" height="56" rx="7"/>
 <text class="nt" x="618" y="76.18">按 ⌘F 或选</text>
 <text class="nt" x="618" y="93.18">文件 → 搜索经文</text>
@@ -340,7 +276,7 @@ footer p{margin:4px 0}
 </g></svg>
 </div>
 <ul class="notes">
-<li>四个入口并不等价：<kbd>⌥Space</kbd> 和 Space+P 走 <code>toggle()</code>（见<a href="#f6">流程 6</a>）；<kbd>⌘F</kbd>（<span class="ui">文件 → 搜索经文</span>）和菜单栏图标菜单的 <span class="ui">打开搜索  (⌥Space / Space+P)</span> 走 <code>show()</code>，只显示不收起；点 Dock 图标只有在<strong>没有任何可见窗口</strong>时才会显示搜索（<code>applicationShouldHandleReopen</code> 里的 <code>if !flag</code>）。</li>
+<li>三个入口并不等价：<kbd>⌥Space</kbd> 走 <code>toggle()</code>（见<a href="#f6">流程 6</a>）；<kbd>⌘F</kbd>（<span class="ui">文件 → 搜索经文</span>）和菜单栏图标菜单的 <span class="ui">打开搜索  (⌥Space)</span> 走 <code>show()</code>，只显示不收起；点 Dock 图标只有在<strong>没有任何可见窗口</strong>时才会显示搜索（<code>applicationShouldHandleReopen</code> 里的 <code>if !flag</code>）。</li>
 <li>输入框占位文字：<span class="ui">书卷 章:节   例如  yhfy 4:24 · yuehan 3 16 · 约 4:24</span>。查询为空时显示 <span class="ui">输入拼音首字母、拼音或中文书名，后面跟 章:节</span> 和一行示例。每敲一个字符就重新搜索，选中项回到第 1 条（<code>SearchViewModel.refresh</code>）。</li>
 <li>三个判定依次落在 <code>QueryParser.parse</code>（第一个 ASCII 数字之前是书名，之后必须是「章 [分隔符 节 [- ~ — 至 到 节尾]]」，<code>yh 4:24:</code> 解析失败）、<code>BookMatcher.match</code>（不做模糊匹配；拉丁书名只允许 a–z、<code>*</code>、<code>?</code>，所以 <code>yhfyx</code>、<code>yh fy 4</code>、<code>yh-4</code> 都没有结果）、<code>SearchEngine.search</code>（没有该章或该节的书卷被剔除：<code>yh 4:24</code> 的四卷「约翰」只剩约翰福音；节尾超出本章时截到末节，如 <code>yhfy 4:20-99</code>）。</li>
 <li>三种失败显示同一个状态：<span class="ui">没有匹配的书卷或章节</span>，下面一行 <span class="ui">拼音只按字首/音节前缀精确匹配（不做模糊匹配），* 匹配任意音节，? 匹配一个音节</span>。此时 <kbd>⏎</kbd> 和 <kbd>⌘⏎</kbd> 被按键监听吞掉但什么都不做，窗口留在原处。</li>
@@ -573,15 +509,13 @@ footer p{margin:4px 0}
 
 <section>
 <h2 id="f6"><span class="num">流程 6</span>热键的切换语义</h2>
-<p class="goal">目标：同一个热键既能呼出搜索，也能把它收走；在搜索框里打字时不被热键打断。</p>
+<p class="goal">目标：同一个热键既能呼出搜索，也能把它收走。</p>
 <div class="fig">
-<svg class="flow" viewBox="0 0 764 740" role="img" aria-labelledby="svgt6" style="width:100%;max-width:764px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
+<svg class="flow" viewBox="0 116 764 624" role="img" aria-labelledby="svgt6" style="width:100%;max-width:764px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
 <title id="svgt6">流程 6：热键的切换语义</title>
 <defs><marker id="arw6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
 <g class="edges">
-<polyline class="edge" points="382,104 382,152" marker-end="url(#arw6)"/>
-<polyline class="edge" points="482,196 532,196" marker-end="url(#arw6)"/>
-<polyline class="edge" points="382,240 382,268" marker-end="url(#arw6)"/>
+<polyline class="edge" points="382,220 382,268" marker-end="url(#arw6)"/>
 <polyline class="edge" points="290,312 232,312" marker-end="url(#arw6)"/>
 <polyline class="edge" points="146,340 146,404" marker-end="url(#arw6)"/>
 <polyline class="edge" points="382,356 382,384" marker-end="url(#arw6)"/>
@@ -590,14 +524,8 @@ footer p{margin:4px 0}
 <polyline class="edge" points="618,456 618,544 468,544" marker-end="url(#arw6)"/>
 <polyline class="edge" points="382,572 382,636" marker-end="url(#arw6)"/>
 </g><g class="nodes">
-<rect class="n-pill" x="282" y="56" width="200" height="48" rx="24"/>
-<text class="nt" x="382" y="84.68">按 ⌥Space 或 Space+P</text>
-<polygon class="n-dec" points="382,152 482,196 382,240 282,196"/>
-<text class="nt" x="382" y="192.18">是 Space+P 且</text>
-<text class="nt" x="382" y="209.18">本 App 活动中？</text>
-<rect class="n-pill" x="532" y="172" width="172" height="48" rx="24"/>
-<text class="nt" x="618" y="192.18">不触发</text>
-<text class="nt" x="618" y="209.18">按键照常进输入框</text>
+<rect class="n-pill" x="296" y="172" width="172" height="48" rx="24"/>
+<text class="nt" x="382" y="200.68">按 ⌥Space</text>
 <polygon class="n-dec" points="382,268 474,312 382,356 290,312"/>
 <text class="nt" x="382" y="308.18">搜索窗口</text>
 <text class="nt" x="382" y="325.18">已在最前？</text>
@@ -620,8 +548,6 @@ footer p{margin:4px 0}
 <rect class="n-pill" x="296" y="636" width="172" height="48" rx="24"/>
 <text class="nt" x="382" y="664.68">可以输入</text>
 </g><g class="labels">
-<text class="el" x="502.5" y="190" text-anchor="middle">是</text>
-<text class="el" x="389" y="258" text-anchor="start">否</text>
 <text class="el" x="265.5" y="306" text-anchor="middle">是</text>
 <text class="el" x="389" y="374" text-anchor="start">否</text>
 <text class="el" x="498.5" y="422" text-anchor="middle">否</text>
@@ -631,138 +557,8 @@ footer p{margin:4px 0}
 <ul class="notes">
 <li><code>SearchWindowController.toggle()</code>：<code>isFrontmost</code>（<code>NSApp.isActive</code>、窗口可见、且是 key window 三者同时成立）为真就 <code>hide()</code>，否则 <code>show()</code>。</li>
 <li><code>show()</code> 只在窗口<strong>不可见</strong>时清空查询并重新定位：移到鼠标所在的屏幕，水平居中，垂直方向比正中高出可视区高度的 12%。窗口可见但被挡住，或 App 不在前台时，保留原查询和位置，只是置前。每次都会 <code>focusToken += 1</code> 让输入框重新获得焦点。</li>
-<li>Space+P 在好查经自己是活动 App 时被忽略：<code>SpaceChordMonitor.handle</code> 一开头遇到 <code>NSApp.isActive</code> 就原样放行。源码注释给的理由是不干扰自己的搜索框——查询里本来就要打空格（<code>yhfy 4 24</code>）和字母 p，拦截会吞字或让空格迟到。放行的同时清掉挂起状态，免得之后一个过期的 keyUp 被误吞。</li>
-<li>由此推出两点：「已在最前则收起」这个分支实际上只有 <kbd>⌥Space</kbd> 走得到；在阅读窗口里也不能用 Space+P 呼出搜索，要用 <kbd>⌘F</kbd> 或 <kbd>⌥Space</kbd>。</li>
-<li><kbd>⌘F</kbd> 和菜单栏的 <span class="ui">打开搜索  (⌥Space / Space+P)</span> 调的是 <code>show()</code>，不会收起窗口。</li>
-</ul>
-</section>
-
-<section>
-<h2 id="f7"><span class="num">流程 7</span>手动停用 / 启用 Space+P</h2>
-<p class="goal">目标：觉得 Space+P 碍事时临时关掉，之后再打开；还没授权时，同一项负责把用户带去授权。</p>
-<div class="fig">
-<svg class="flow" viewBox="0 0 1000 276" role="img" aria-labelledby="svgt7" style="width:100%;max-width:1000px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
-<title id="svgt7">流程 7：手动停用 / 启用 Space+P</title>
-<defs><marker id="arw7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
-<g class="edges">
-<polyline class="edge" points="241,80 296,80" marker-end="url(#arw7)"/>
-<polyline class="edge" points="468,80 526,80" marker-end="url(#arw7)"/>
-<polyline class="edge" points="710,80 768,80" marker-end="url(#arw7)"/>
-<polyline class="edge" points="618,124 618,152" marker-end="url(#arw7)"/>
-<polyline class="edge" points="710,196 768,196" marker-end="url(#arw7)"/>
-<polyline class="edge" points="526,196 468,196" marker-end="url(#arw7)"/>
-<polyline class="edge" points="296,196 244,196" marker-end="url(#arw7)"/>
-</g><g class="nodes">
-<rect class="n-pill" x="51" y="56" width="190" height="48" rx="24"/>
-<text class="nt" x="146" y="76.18">打开菜单栏图标菜单</text>
-<text class="nt" x="146" y="93.18">或「好查经」菜单</text>
-<rect class="n-act" x="296" y="52" width="172" height="56" rx="7"/>
-<text class="nt" x="382" y="76.18">点菜单里的</text>
-<text class="nt" x="382" y="93.18">Space+P 那一项</text>
-<polygon class="n-dec" points="618,36 710,80 618,124 526,80"/>
-<text class="nt" x="618" y="76.18">监听</text>
-<text class="nt" x="618" y="93.18">正在运行？</text>
-<rect class="n-pill" x="768" y="56" width="172" height="48" rx="24"/>
-<text class="nt" x="854" y="76.18">停止监听</text>
-<text class="nt" x="854" y="93.18">标题变为「启用…」</text>
-<polygon class="n-dec" points="618,152 710,196 618,240 526,196"/>
-<text class="nt" x="618" y="192.18">辅助功能</text>
-<text class="nt" x="618" y="209.18">已授权？</text>
-<rect class="n-pill" x="768" y="172" width="172" height="48" rx="24"/>
-<text class="nt" x="854" y="192.18">启动监听</text>
-<text class="nt" x="854" y="209.18">标题变为「停用…」</text>
-<rect class="n-sys" x="296" y="168" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M303,168 V224 Q296,224 296,217 V175 Q296,168 303,168 Z"/>
-<text class="nt" x="385" y="192.18">请求授权、打开系统设置</text>
-<text class="nt" x="385" y="209.18">辅助功能页 · 2 秒轮询</text>
-<rect class="n-pill" x="48" y="172" width="196" height="48" rx="24"/>
-<text class="nt" x="146" y="192.18">仍是「开启 Space+P…」</text>
-<text class="nt" x="146" y="209.18">勾选后自动启用（流程 1）</text>
-</g><g class="labels">
-<text class="el" x="734.5" y="74" text-anchor="middle">是</text>
-<text class="el" x="625" y="142" text-anchor="start">否</text>
-<text class="el" x="734.5" y="190" text-anchor="middle">是</text>
-<text class="el" x="501.5" y="190" text-anchor="middle">否</text>
-</g></svg>
-</div>
-<ul class="notes">
-<li>动作是 <code>AppDelegate.toggleChord()</code>：正在运行就 <code>stop()</code>；没在运行就 <code>start()</code>，失败（未授权，或事件 tap 建不起来）则依次 <code>requestPermission()</code>、<code>openAccessibilitySettings()</code>（直接打开「系统设置 → 隐私与安全性 → 辅助功能」，因为系统提示只会弹一次）、<code>waitForPermission()</code>（已经在轮询就不重复起定时器）。最后统一 <code>updateChordMenu()</code>，三种标题见<a href="#f1">流程 1</a>的表：<span class="ui">停用 Space+P 快捷键</span>、<span class="ui">启用 Space+P 快捷键</span>、<span class="ui">开启 Space+P 快捷键（需授权辅助功能）…</span>。</li>
-<li>停用只影响 Space+P，<kbd>⌥Space</kbd> 不受影响。这个开关不落盘，下次启动只要已授权就又是启用状态。</li>
-<li>README 提到 <code>make app</code> 用 ad-hoc 签名，重新构建后授权可能失效，需要在系统设置里删掉旧条目重新勾选；那时走的是「否 → 请求授权、打开系统设置」这一支，勾选之后最多 2 秒自动启用，不用再回菜单点一次。</li>
-</ul>
-</section>
-
-<section>
-<h2 id="f8"><span class="num">流程 8</span>Space 键的判定（Space+P 组合键）</h2>
-<p class="goal">目标：启用 Space+P 之后，在别的 App 里照常打空格；用户能感觉到的只有「长按空格会迟一点出来」。</p>
-<div class="fig">
-<svg class="flow" viewBox="0 0 764 856" role="img" aria-labelledby="svgt8" style="width:100%;max-width:764px;min-width:720px" xmlns="http://www.w3.org/2000/svg">
-<title id="svgt8">流程 8：Space 键的判定（Space+P 组合键）</title>
-<defs><marker id="arw8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0,1 L10,5 L0,9 Z"/></marker></defs>
-<g class="edges">
-<polyline class="edge" points="382,104 382,152" marker-end="url(#arw8)"/>
-<polyline class="edge" points="474,196 532,196" marker-end="url(#arw8)"/>
-<polyline class="edge" points="382,240 382,284" marker-end="url(#arw8)"/>
-<polyline class="edge" points="382,340 382,384" marker-end="url(#arw8)"/>
-<polyline class="edge" points="290,428 232,428" marker-end="url(#arw8)"/>
-<polyline class="edge" points="382,472 382,500" marker-end="url(#arw8)"/>
-<polyline class="edge" points="290,544 232,544" marker-end="url(#arw8)"/>
-<polyline class="edge" points="474,544 532,544" marker-end="url(#arw8)"/>
-<polyline class="edge" points="382,588 382,632" marker-end="url(#arw8)"/>
-<polyline class="edge" points="382,688 382,752" marker-end="url(#arw8)"/>
-<polyline class="edge" points="146,572 146,776 284,776" marker-end="url(#arw8)"/>
-<polyline class="edge" points="618,572 618,776 480,776" marker-end="url(#arw8)"/>
-</g><g class="nodes">
-<rect class="n-pill" x="284" y="56" width="196" height="48" rx="24"/>
-<text class="nt" x="382" y="84.68">在别的 App 里按下 Space</text>
-<polygon class="n-dec" points="382,152 474,196 382,240 290,196"/>
-<text class="nt" x="382" y="192.18">同时按着</text>
-<text class="nt" x="382" y="209.18">修饰键？</text>
-<rect class="n-pill" x="532" y="172" width="172" height="48" rx="24"/>
-<text class="nt" x="618" y="200.68">不拦截，原样放行</text>
-<rect class="n-sys" x="296" y="284" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M303,284 V340 Q296,340 296,333 V291 Q296,284 303,284 Z"/>
-<text class="nt" x="385" y="308.18">扣住这次 Space</text>
-<text class="nt" x="385" y="325.18">开始计时 0.35 秒</text>
-<polygon class="n-dec" points="382,384 474,428 382,472 290,428"/>
-<text class="nt" x="382" y="424.18">计时内</text>
-<text class="nt" x="382" y="441.18">按下了 P？</text>
-<rect class="n-pill" x="60" y="404" width="172" height="48" rx="24"/>
-<text class="nt" x="146" y="424.18">吞掉 Space 和 P</text>
-<text class="nt" x="146" y="441.18">触发切换 → 流程 6</text>
-<polygon class="n-dec" points="382,500 474,544 382,588 290,544"/>
-<text class="nt" x="382" y="540.18">先发生的</text>
-<text class="nt" x="382" y="557.18">是什么？</text>
-<rect class="n-sys" x="60" y="516" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M67,516 V572 Q60,572 60,565 V523 Q60,516 67,516 Z"/>
-<text class="nt" x="149" y="540.18">补发 Space</text>
-<text class="nt" x="149" y="557.18">按下 + 松开</text>
-<rect class="n-sys" x="532" y="516" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M539,516 V572 Q532,572 532,565 V523 Q532,516 539,516 Z"/>
-<text class="nt" x="621" y="540.18">先补发 Space</text>
-<text class="nt" x="621" y="557.18">再补发那个键</text>
-<rect class="n-sys" x="296" y="632" width="172" height="56" rx="7"/>
-<path class="n-stripe" d="M303,632 V688 Q296,688 296,681 V639 Q296,632 303,632 Z"/>
-<text class="nt" x="385" y="656.18">补发 Space 按下</text>
-<text class="nt" x="385" y="673.18">松开时原样放行</text>
-<rect class="n-pill" x="284" y="752" width="196" height="48" rx="24"/>
-<text class="nt" x="382" y="780.68">前台 App 正常收到空格</text>
-</g><g class="labels">
-<text class="el" x="498.5" y="190" text-anchor="middle">是</text>
-<text class="el" x="389" y="258" text-anchor="start">否</text>
-<text class="el" x="265.5" y="422" text-anchor="middle">是</text>
-<text class="el" x="389" y="490" text-anchor="start">否</text>
-<text class="el" x="265.5" y="538" text-anchor="middle">松开</text>
-<text class="el" x="498.5" y="538" text-anchor="middle">别的键</text>
-<text class="el" x="389" y="606" text-anchor="start">计时到点</text>
-</g></svg>
-</div>
-<ul class="notes">
-<li>实现在 <code>SpaceChordMonitor.swift</code>（CGEventTap）。Space 的 keyDown 先被吞掉，<code>holdWindow = 0.35</code> 秒内决定去向。P 必须在 Space 还按着、且计时未到时按下才算组合键；超时之后再按 P 就是普通的字母 p。</li>
-<li>组合键成立时 Space 和 P 的按下、松开、自动重复全部吞掉，前台 App 什么也收不到，然后在主线程调用 <code>toggle()</code>。</li>
-<li>三种「不是组合键」的情形都会补发 Space，顺序不乱：快速点按 → 立刻补发按下和松开；接着按了别的键 → 先补 Space 再补那个键；一直按着 → 0.35 秒到点补发按下，真正松开时的 keyUp 原样放行。补发的事件带一个标记值，tap 再看到它们时直接放行。</li>
-<li>只要按着 <kbd>⌘</kbd> <kbd>⌃</kbd> <kbd>⌥</kbd> <kbd>⇧</kbd> 或 <kbd>Fn</kbd> 任意一个就完全不拦截，<kbd>⌘Space</kbd>、<kbd>⌥Space</kbd> 等系统或其他热键不受影响。好查经自己在前台时同样不拦截（<a href="#f6">流程 6</a>）。</li>
-<li>事件 tap 因超时或用户输入被系统停用时，回调里会把它重新启用。</li>
+<li><kbd>⌥Space</kbd> 在哪个 App 里按都走这条路，好查经自己在前台时也一样：在阅读窗口里按它呼出搜索，搜索已在最前时再按一次收起。</li>
+<li><kbd>⌘F</kbd> 和菜单栏的 <span class="ui">打开搜索  (⌥Space)</span> 调的是 <code>show()</code>，不会收起窗口。</li>
 </ul>
 </section>
 
@@ -774,9 +570,9 @@ footer p{margin:4px 0}
 <div class="tablewrap"><table>
 <tr><th>#</th><th>出处怎么说</th><th>代码实际怎么做</th><th>位置</th></tr>
 <tr><td class="n">A1</td><td>README 说呼出搜索还可以：<span class="ui">点 Dock 图标、菜单栏图标或菜单「文件 → 搜索经文」也可以</span>；<code>SearchWindow.swift</code> 顶部注释也把 Dock 图标列为入口。</td><td>点 Dock 图标只在没有可见窗口时才显示搜索；有阅读窗口开着时只是激活 App，搜索不会出现。</td><td><code>AppDelegate.applicationShouldHandleReopen</code></td></tr>
-<tr><td class="n">A2</td><td>同一句：点「菜单栏图标」呼出搜索。</td><td>点图标只弹出菜单，要再选 <span class="ui">打开搜索  (⌥Space / Space+P)</span>，一共两步。</td><td><code>installStatusItem</code></td></tr>
-<tr><td class="n">A3</td><td>README：<kbd>⌥Space</kbd>「无需任何权限的备用快捷键，始终可用」。</td><td>注册结果被丢弃；组合被其他 App 占用时注册失败，没有提示也没有退路。</td><td><code>hotkey?.register()</code>，<code>GlobalHotkey.register</code></td></tr>
-<tr><td class="n">A4</td><td>菜单栏菜单项 <span class="ui">打开搜索  (⌥Space / Space+P)</span> 和「关于好查经」窗口底部的 <span class="ui">⌥Space 或按住 Space 再按 P 呼出搜索 · ⏎ 打开 · ⇧⏎ / ⌘D 新窗口 · ⌘⏎ 复制</span> 把 Space+P 当作通用入口。</td><td>好查经是活动 App 时 Space+P 一律被忽略，包括刚用 <kbd>esc</kbd> / <kbd>⌘Q</kbd> 收起窗口、App 仍占着前台的时候（见 B1）。README 的快捷键表里写了「自己在前台时不拦截」，界面上没有任何说明。</td><td><code>SpaceChordMonitor.handle</code></td></tr>
+<tr><td class="n">A2</td><td>同一句：点「菜单栏图标」呼出搜索。</td><td>点图标只弹出菜单，要再选 <span class="ui">打开搜索  (⌥Space)</span>，一共两步。</td><td><code>installStatusItem</code></td></tr>
+<tr><td class="n">A3</td><td>README：<kbd>⌥Space</kbd>「全局快捷键，不需要任何系统权限」，启动后「即生效」。</td><td>注册结果被丢弃；组合被其他 App 占用时注册失败，没有提示也没有退路。它现在是唯一的全局热键，失败时只能靠 Dock 图标和菜单栏图标，这一条比以前更要紧。</td><td><code>hotkey?.register()</code>，<code>GlobalHotkey.register</code></td></tr>
+<tr><td class="n">A4</td><td>（已不适用）菜单栏菜单项和「关于好查经」窗口底部曾把第二个全局快捷键 Space+P 写成通用入口，而它在好查经自己是活动 App 时无效。</td><td>该快捷键连同权限流程已整体移除。两处现在只写 <kbd>⌥Space</kbd>：<span class="ui">打开搜索  (⌥Space)</span> 和 <span class="ui">⌥Space 呼出搜索 · ⏎ 打开 · ⇧⏎ / ⌘D 新窗口 · ⌘⏎ 复制</span>，与行为一致。</td><td><code>installStatusItem</code>，<code>AboutWindow.swift</code></td></tr>
 <tr><td class="n">A5</td><td>搜索窗口底栏：<span class="ui">↑↓ 选择    ⏎ 打开    ⇧⏎ 新窗口打开    ⌘⏎ 复制经文    esc 隐藏</span>。</td><td>还支持 <kbd>⌃N</kbd> <kbd>⌃P</kbd>、<kbd>⌘D</kbd>、<kbd>⌘W</kbd>，以及「单击已选中的行即打开」，底栏都没提。属于遗漏，不算矛盾。</td><td><code>SearchView.swift</code>，<code>SearchWindow.installKeyMonitor</code></td></tr>
 <tr><td class="n">A6</td><td>无结果时的说明只讲拼音规则：<span class="ui">拼音只按字首/音节前缀精确匹配（不做模糊匹配）…</span></td><td>同一个状态也由数字格式错误（<code>yh 4:24:</code>）和章节越界（<code>yhfy 4:99</code>）触发，这两种情况下这句说明对不上原因。</td><td><code>SearchView.emptyState</code>，<code>SearchEngine.search</code></td></tr>
 <tr><td class="n">A7</td><td>README：阅读窗口「右上角 ⧉ 按钮」。</td><td>⧉ 在标题栏下方工具行的右数第二个，最右边是「下一章」›。</td><td><code>ReaderView</code></td></tr>
@@ -788,14 +584,14 @@ footer p{margin:4px 0}
 <p class="caveat">以下是从源码推断的，没有运行 App 验证；标「高」的值得先确认。</p>
 <div class="tablewrap"><table>
 <tr><th>#</th><th>现象</th><th>原因</th><th>程度</th></tr>
-<tr><td class="n">B1</td><td>收起搜索窗口后焦点不回到原来的 App。<kbd>⌘⏎</kbd> 复制完要先手动切回去才能 <kbd>⌘V</kbd>；收起后立刻按 Space+P 没反应，要先点一下别的 App。</td><td><code>hide()</code> 只 <code>orderOut</code>，没有 <code>NSApp.hide</code> 或重新激活上一个 App，好查经仍是活动 App；而活动期间 Space+P 被忽略。</td><td><span class="sev hi">高</span></td></tr>
+<tr><td class="n">B1</td><td>收起搜索窗口后焦点不回到原来的 App。<kbd>⌘⏎</kbd> 复制完要先手动切回去才能 <kbd>⌘V</kbd>。只在好查经已是活动 App 时如此（启动、点 Dock 图标之后）；别的 App 在前台时用 <kbd>⌥Space</kbd> 呼出的是不激活 App 的浮层，收起后焦点自己回去。</td><td><code>hide()</code> 只 <code>orderOut</code>，没有 <code>NSApp.hide</code> 或重新激活上一个 App，好查经仍是活动 App。</td><td><span class="sev hi">高</span></td></tr>
 <tr><td class="n">B2</td><td>用中文输入法打「约翰福音」时，选字的 <kbd>↑</kbd> <kbd>↓</kbd>、上屏的 <kbd>⏎</kbd>、取消的 <kbd>esc</kbd> 可能被搜索窗口抢走（移动选中项 / 打开经文 / 收起窗口）。</td><td><code>installKeyMonitor</code> 的本地监听先于输入法拿到按键，且没有检查输入框是否有未上屏的候选文字。</td><td><span class="sev hi">高</span></td></tr>
 <tr><td class="n">B3</td><td>复制成功没有任何反馈，窗口只是消失。</td><td><code>copySelected</code> 写完剪贴板就 <code>hide()</code>。</td><td><span class="sev">中</span></td></tr>
 <tr><td class="n">B4</td><td><kbd>⏎</kbd> 会覆盖最前阅读窗口里正在读的经文，没有后退；翻章到卷末不能进下一卷。</td><td><code>ReaderWindows.open</code> 直接改 <code>model.passage</code>；<code>ReaderModel.step</code> 限定在本卷。</td><td><span class="sev">中</span></td></tr>
 <tr><td class="n">B5</td><td>节段写反（<code>yhfy 4:24-20</code>）不报错，被当成单节 4:24。</td><td><code>Passage.verseRange</code> 取 <code>max(v, verseEnd)</code>，标题也只在 <code>e &gt; v</code> 时才显示节尾。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B6</td><td><kbd>⌘↑</kbd>、<kbd>⌥↓</kbd> 这类带修饰键的方向键也被当作移动选中项，输入框里的光标跳转失效。</td><td>监听里 keyCode 125 / 126 两个分支不看修饰键。</td><td><span class="sev">低</span></td></tr>
 <tr><td class="n">B7</td><td>阅读窗口的大小和位置不跨启动保存；搜索窗口虽然设了 <code>setFrameAutosaveName("ChaJingSearch")</code>，但每次从隐藏状态呼出都会重新居中，实际只有尺寸被记住。</td><td><code>ReaderWindows.lastSize</code> 只在内存里；<code>show()</code> 调 <code>centerOnActiveScreen()</code>。</td><td><span class="sev">低</span></td></tr>
-<tr><td class="n">B8</td><td>启动后才授予或撤销权限时，Space+P 菜单项的标题会不会与实际状态不符。</td><td>不会了：两个菜单的 delegate 都是 <code>AppDelegate</code>，每次打开菜单都在 <code>menuNeedsUpdate</code> 里调 <code>updateChordMenu()</code>；未授权时点击该项还会重新开始轮询。</td><td><span class="sev">已修复</span></td></tr>
+<tr><td class="n">B8</td><td>（已不适用）快捷键开关菜单项的标题会不会与实际状态不符。</td><td>那个菜单项连同权限流程已移除，两个菜单里的标题现在都是固定文字。</td><td><span class="sev">已不适用</span></td></tr>
 </table></div>
 </section>
 
@@ -803,7 +599,7 @@ footer p{margin:4px 0}
 
 <footer>
 <p>同组文档：<a href="app-map.html">app-map.html</a>（界面地图）· <a href="wireflow.html">wireflow.html</a>（线框流程）· <a href="storyboard.html">storyboard.html</a>（故事板）</p>
-<p>2026-09-18 根据源码整理：<code>AppDelegate</code>、<code>AboutWindow</code>、<code>SearchWindow</code>、<code>SearchView</code>、<code>SearchViewModel</code>、<code>ReaderWindow</code>、<code>SearchEngine</code>、<code>QueryParser</code>、<code>BookMatcher</code>、<code>GlobalHotkey</code>、<code>SpaceChordMonitor</code>、<code>BibleStore</code>、<code>Models</code> 与 README；匹配行为用 <code>scripts/chajing_cli.py</code> 核对过。未运行 App。</p>
+<p>2026-09-18 根据源码整理：<code>AppDelegate</code>、<code>AboutWindow</code>、<code>SearchWindow</code>、<code>SearchView</code>、<code>SearchViewModel</code>、<code>ReaderWindow</code>、<code>SearchEngine</code>、<code>QueryParser</code>、<code>BookMatcher</code>、<code>GlobalHotkey</code>、<code>BibleStore</code>、<code>Models</code> 与 README；匹配行为用 <code>scripts/chajing_cli.py</code> 核对过。未运行 App。</p>
 </footer>
 
 </div>
