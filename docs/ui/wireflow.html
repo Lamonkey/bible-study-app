@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-Hans" class="nojs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>好查经 · 界面流程 (Wireflow)</title>
+<style>
+:root{--bg:#f3f4f7;--ink:#1c1e22;--muted:#626a78;--card:#ffffff;--line:#d3d8e0;--lane:#e9ecf1;--lane-line:#cdd3dc;
+--group:#7d8797;--accent:#2563eb;--accent-soft:#dbe6ff;--real:#15803d;--real-bg:#dcfce7;--mock:#a15c07;--mock-bg:#fdf0d5;--mock-card:#fffaf0;
+--arrow:#3f4756;--arrow-open:#2563eb;--arrow-exit:#c02634;--pill:#ffffff;--kbd-bg:#eef0f4;--kbd-line:#c2c8d2;--tb:#e4e7ec;--menu:#f7f8fa;
+--hl:#f3c9cd;--ok:#34c759;--shadow:0 1px 3px rgba(20,25,35,.12);--overlay:rgba(15,18,24,.78)}
+@media (prefers-color-scheme: dark){:root{--bg:#111316;--ink:#e7e9ee;--muted:#98a1b0;--card:#1c1f25;--line:#363c47;--lane:#171a1f;--lane-line:#2a2f38;
+--group:#7a8494;--accent:#6fa1ff;--accent-soft:#1d2c4d;--real:#4ade80;--real-bg:#11301c;--mock:#f5b942;--mock-bg:#3a2c0d;--mock-card:#211d14;
+--arrow:#aeb6c5;--arrow-open:#6fa1ff;--arrow-exit:#f27782;--pill:#242830;--kbd-bg:#2a2e37;--kbd-line:#454c59;--tb:#2a2e36;--menu:#22262d;
+--hl:#5a2b31;--ok:#30d158;--shadow:0 1px 3px rgba(0,0,0,.5);--overlay:rgba(0,0,0,.82)}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 -apple-system,"PingFang SC",sans-serif}
+header.top{padding:20px 24px 8px;max-width:1500px}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:.2px}
+h2{font-size:16px;margin:28px 0 10px}
+p.lead{margin:0 0 12px;color:var(--muted);max-width:1100px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:12px;color:var(--muted);align-items:center}
+.legend span.it{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:30px;height:0;border-top:2.5px solid var(--arrow)}
+.sw.open{border-color:var(--arrow-open)}.sw.exit{border-color:var(--arrow-exit)}
+.sw.grp{height:14px;width:24px;border:1.5px dashed var(--group);border-radius:5px}
+.bar{position:sticky;top:0;z-index:20;display:flex;gap:6px;align-items:center;padding:8px 24px;background:var(--bg);border-bottom:1px solid var(--line);font-size:12px;color:var(--muted)}
+.bar button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:7px;padding:4px 11px;cursor:pointer}
+.bar button:hover{border-color:var(--accent)}
+.bar output{min-width:44px;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums}
+.bar .hint{margin-left:10px}
+.nojs .bar button,.nojs .bar output,.nojs .bar .hint{display:none}
+.bar .nojs-only{display:none}.nojs .bar .nojs-only{display:inline}
+#scroller{height:calc(100vh - 60px);min-height:480px;overflow:auto;border-bottom:1px solid var(--line);background:var(--bg);cursor:grab}
+#scroller.drag{cursor:grabbing;user-select:none}
+#sizer{position:relative;overflow:hidden}
+#stage{position:relative;transform-origin:0 0;font-size:12px;line-height:1.4}
+.lane{position:absolute;background:var(--lane);border:1px solid var(--lane-line);border-radius:16px}
+.lt{position:absolute;left:14px;top:8px;height:22px;line-height:22px;font-size:15px;font-weight:700;white-space:nowrap}
+.lt small{font-weight:400;font-size:11px;color:var(--muted);margin-left:8px}
+.group{position:absolute;border:1.5px dashed var(--group);border-radius:14px}
+.gt{position:absolute;left:16px;top:-10px;height:20px;line-height:20px;padding:0 8px;font-size:11px;color:var(--muted);background:var(--lane);border-radius:10px;white-space:nowrap}
+.group.outer .gt{background:var(--bg)}
+#wires{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.wire{fill:none;stroke:var(--arrow);stroke-width:2;stroke-linejoin:round}
+.wire.open{stroke:var(--arrow-open)}.wire.exit{stroke:var(--arrow-exit)}
+.dot{fill:var(--arrow)}.dot.open{fill:var(--arrow-open)}.dot.exit{fill:var(--arrow-exit)}
+.mh{fill:var(--arrow)}.mh.open{fill:var(--arrow-open)}.mh.exit{fill:var(--arrow-exit)}
+.node,.note{position:absolute;padding:9px 9px;border:1px solid var(--line);border-radius:10px;background:var(--card);overflow:hidden;box-shadow:var(--shadow)}
+.node.mock{border-style:dashed;border-color:var(--mock);background:var(--mock-card)}
+.note{border-style:dashed;background:transparent;box-shadow:none;padding:9px 10px;font-size:11px;line-height:15px;color:var(--muted)}
+.note ul{margin:0;padding-left:14px}.note li{margin:0 0 4px}
+.nh{height:20px;line-height:20px;margin-bottom:6px;display:flex;gap:6px;align-items:center;white-space:nowrap;overflow:hidden}
+.nid{font-weight:700;font-size:11px;padding:0 6px;border-radius:5px;background:var(--ink);color:var(--card);line-height:17px}
+.nt{font-weight:600;font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis}
+.tag{font-size:10px;line-height:16px;padding:0 6px;border-radius:8px;font-weight:600}
+.tag.real{color:var(--real);background:var(--real-bg)}.tag.mock{color:var(--mock);background:var(--mock-bg)}
+.cap{margin-top:6px;font-size:11px;line-height:15px;color:var(--muted)}
+.win{border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--card)}
+.win.shot{cursor:zoom-in;display:block}
+.win.shot:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.win img{display:block}
+.tb{height:20px;background:var(--tb);display:flex;align-items:center;gap:4px;padding:0 7px;position:relative}
+.tb i{width:7px;height:7px;border-radius:50%;background:#ff5f57}.tb i:nth-child(2){background:#febc2e}.tb i:nth-child(3){background:#28c840}
+.tb b{position:absolute;left:0;right:0;text-align:center;font-size:10.5px;font-weight:600;color:var(--muted);line-height:20px;pointer-events:none}
+.mb{position:relative;overflow:hidden}
+.mbar{height:24px;line-height:24px;font-size:11px;background:var(--tb);border-radius:5px;padding:0 8px;display:flex;gap:10px;align-items:center;white-space:nowrap}
+.mbar.right{justify-content:flex-end}
+.mbar span.on{background:var(--accent);color:#fff;padding:0 6px;border-radius:4px;line-height:18px;height:18px;display:inline-flex;align-items:center}
+.apple{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block}
+.bk{display:inline-block;width:9px;height:11px;border:1.5px solid currentColor;border-bottom-width:3px;border-radius:2px 2px 1px 3px;vertical-align:-1px}
+.menu{border:1px solid var(--line);border-radius:6px;padding:5px 0;background:var(--menu);box-shadow:var(--shadow)}
+.mi{height:22px;line-height:22px;padding:0 10px;font-size:12px;display:flex;justify-content:space-between;white-space:nowrap}
+.mi span{white-space:pre}
+.mi em{font-style:normal;color:var(--muted)}
+.mi.hl{background:var(--accent);color:#fff;margin:0 4px;padding:0 6px;border-radius:4px}
+.sep{height:1px;margin:4px 8px;background:var(--line)}
+.two{display:flex;gap:8px;align-items:flex-start}
+.center{display:flex;justify-content:center}
+.dock{height:50px;display:flex;gap:6px;padding:6px 8px;border-radius:13px;background:var(--tb)}
+.di{position:relative;width:36px;height:36px;border-radius:9px;background:var(--line);display:flex;align-items:center;justify-content:center}
+.di.g2{opacity:.7}.di.g3{opacity:.5}
+.di.app{background:var(--accent-soft);color:var(--accent)}
+.di u{position:absolute;bottom:-5px;left:16px;width:4px;height:4px;border-radius:50%;background:var(--ink)}
+.applabel,.desk{height:22px;line-height:22px;font-size:11px;text-align:center;color:var(--muted)}
+.desk{height:26px;line-height:26px;font-style:italic}
+.keys{height:36px;display:flex;align-items:center;justify-content:center;gap:6px}
+.key{height:26px;line-height:24px;padding:0 10px;border:1px solid var(--kbd-line);border-bottom-width:2px;border-radius:6px;background:var(--kbd-bg);font-size:12px}
+.plus{color:var(--muted)}
+.ghost{position:absolute;left:8px;top:8px;width:170px;height:78px;border:1.5px dashed var(--muted);border-radius:8px;text-align:center;font-size:11px;line-height:16px;color:var(--muted);padding-top:22px}
+.stack{position:relative;width:240px;height:200px;margin:0 auto}
+.win.fw{position:absolute;width:200px;box-shadow:var(--shadow)}
+.win.fw.mini{width:120px}
+.fwb{padding:8px}
+.fwb s{display:block;height:5px;margin:0 0 6px;border-radius:3px;background:var(--line)}
+.fwb s.hl{background:var(--hl)}
+pre.clip{margin:0;height:96px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--menu);font:10.5px/19px ui-monospace,Menlo,monospace;white-space:pre;overflow:hidden}
+.dlg{height:100%;border:1px solid var(--line);border-radius:12px;background:var(--menu);padding:12px 14px;text-align:center;font-size:11px;line-height:15px;box-shadow:var(--shadow)}
+.dlg b{display:block;margin-bottom:5px}
+.dlg p{margin:0 0 4px;color:var(--muted)}.dlg.about p{margin:0}.dlg p.gap{height:8px}
+.dicon{width:26px;height:26px;margin:0 auto 4px;border-radius:7px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.btns{margin-top:8px;display:flex;gap:8px;justify-content:center}
+.btn{height:24px;line-height:22px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:var(--card);font-size:11px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}.btn.wide{padding:0 40px}
+.pane{height:100%;border:1px solid var(--line);border-radius:8px;background:var(--menu);padding:10px 12px;font-size:11px;line-height:15px}
+.ph{font-size:12px;font-weight:600;line-height:18px}
+.pane p{margin:2px 0 6px;color:var(--muted)}
+.prow{height:26px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line)}
+.tg{width:26px;height:15px;border-radius:8px;background:var(--line);position:relative;display:inline-block}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#fff}
+.tg.on{background:var(--ok)}.tg.on::after{left:13px}
+.lbl{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;text-align:center;background:var(--pill);border:1px solid var(--arrow);border-radius:9px;padding:4px 8px;font-size:12px;line-height:17px;font-weight:600;box-shadow:var(--shadow)}
+.lbl.open{border-color:var(--arrow-open)}.lbl.exit{border-color:var(--arrow-exit)}
+.lbl small{display:block;font-size:10.5px;line-height:14px;font-weight:400;color:var(--muted)}
+kbd,code{font:inherit;font-size:.92em;padding:0 5px;border:1px solid var(--kbd-line);border-bottom-width:2px;border-radius:5px;background:var(--kbd-bg);white-space:nowrap}
+code{border-bottom-width:1px;font-family:ui-monospace,Menlo,monospace}
+main.below{padding:4px 24px 40px;max-width:1500px}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;padding:5px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600;white-space:nowrap}
+td:first-child{font-weight:700;white-space:nowrap}
+.tw{overflow-x:auto}
+ol.issues{padding-left:22px;max-width:1100px}ol.issues li{margin-bottom:8px}
+footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+a{color:var(--accent)}
+#lb{position:fixed;inset:0;z-index:50;background:var(--overlay);display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;cursor:zoom-out;padding:20px}
+#lb.on{display:flex}
+#lb .win{cursor:zoom-out;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#lb img{width:auto;height:auto;max-width:92vw;max-height:calc(100vh - 110px)}
+#lb .tb{height:26px}#lb .tb i{width:10px;height:10px}#lb .tb b{font-size:12.5px;line-height:26px}
+#lb figcaption{color:#fff;font-size:13px}
+</style>
+</head>
+<body>
+<header class="top">
+<h1>好查经 · 界面流程 (Wireflow)</h1>
+<p class="lead">一张画布看完整个 app：每个方块是用户真正会看到的一个界面状态，每条箭头是一次操作（按键、点击、菜单项）以及它带你去的下一个界面。用途是不用打开 app、不用一路点过去，扫一眼就能找到「要改的是哪一屏」。搜索窗口、阅读窗口和「关于好查经」窗口的画面是从真实 SwiftUI 视图离屏渲染的截图；菜单、系统对话框、Dock、后台状态没有截图，用源码里的原文字符串画成示意图。</p>
+<div class="legend">
+<span class="it"><span class="tag real">实拍</span>真实视图的离屏截图（不含标题栏，外框和标题栏是 CSS 补画的），点击可放大</span>
+<span class="it"><span class="tag mock">示意</span>虚线边框：按源码字符串手绘的示意，不是截图</span>
+<span class="it"><span class="sw open"></span>打开 / 唤出</span>
+<span class="it"><span class="sw exit"></span>收起 / 退出</span>
+<span class="it"><span class="sw"></span>同一窗口内的变化、菜单与权限</span>
+<span class="it"><span class="sw grp"></span>从虚线框或泳道边缘出发 = 框内任一状态都适用</span>
+<span class="it">箭头上的标签：第一行是确切的触发方式，小字是条件或结果</span>
+</div>
+</header>
+<div class="bar"><button id="zfit" type="button">全图</button><button id="zw" type="button">适应宽度</button><button id="z100" type="button">100%</button><button id="zout" type="button" aria-label="缩小">−</button><output id="zv">100%</output><button id="zin" type="button" aria-label="放大">+</button>
+<span class="nojs-only">未启用 JavaScript：画布按 100% 显示，直接滚动查看。</span><span class="hint">拖动画布平移 · 按住 ⌘ 或 Ctrl 滚轮缩放 · 双击空白处在全图与 100% 之间切换 · 点击截图放大</span></div>
+<div id="scroller"><div id="sizer" style="width:3954px;height:3116px"><div id="stage" data-w="3954" data-h="3116" style="width:3954px;height:3116px">
+<section class="lane" id="L_entry" style="left:140px;top:120px;width:360px;height:1578px" aria-label="入口"><div class="lt" data-tw="148">入口<small>怎样把搜索窗口叫出来</small></div></section>
+<section class="lane" id="L_search" style="left:810px;top:120px;width:1550px;height:1578px" aria-label="搜索窗口"><div class="lt" data-tw="175">搜索窗口<small>好查经 · 760×460</small></div></section>
+<section class="lane" id="L_reader" style="left:2540px;top:120px;width:1334px;height:1578px" aria-label="阅读窗口"><div class="lt" data-tw="197">阅读窗口<small>可开任意多个 · 640×720</small></div></section>
+<section class="lane" id="L_bg" style="left:1360px;top:1798px;width:2514px;height:353px" aria-label="后台与退出"><div class="lt" data-tw="198">后台与退出<small>窗口收起后 app 去了哪</small></div></section>
+<section class="lane" id="L_menus" style="left:140px;top:2251px;width:3754px;height:805px" aria-label="菜单与对话框"><div class="lt" data-tw="329">菜单与对话框<small>菜单栏图标菜单、主菜单、关于、辅助功能权限</small></div></section>
+<div class="group outer" id="G_front" style="left:790px;top:100px;width:3104px;height:1618px"><div class="gt" data-tw="149">好查经在前台 · 任意窗口</div></div>
+<div class="group" id="G_sel" style="left:1400px;top:210px;width:920px;height:1096px"><div class="gt" data-tw="104">有选中结果的状态</div></div>
+<div class="group" id="G_single" style="left:2570px;top:210px;width:1274px;height:481px"><div class="gt" data-tw="82">任一阅读窗口</div></div>
+<div class="group" id="G_bg" style="left:1400px;top:1854px;width:1630px;height:267px"><div class="gt" data-tw="151">app 仍在运行 · 快捷键有效</div></div>
+<div class="group" id="G_menus" style="left:180px;top:2351px;width:760px;height:395px"><div class="gt" data-tw="104">两个菜单共有的项</div></div>
+<div class="group" id="G_chord" style="left:1160px;top:2351px;width:400px;height:605px"><div class="gt" data-tw="137">同一个菜单项的三种标题</div></div>
+<svg id="wires" width="3954" height="3116" viewBox="0 0 3954 3116" aria-hidden="true"><defs>
+<marker id="ah-nav" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path class="mh nav" d="M0 1.2 L12 6 L0 10.8 z"/></marker>
+<marker id="ah-open" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path class="mh open" d="M0 1.2 L12 6 L0 10.8 z"/></marker>
+<marker id="ah-exit" viewBox="0 0 12 12" refX="6" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path class="mh exit" d="M0 1.2 L12 6 L0 10.8 z"/></marker>
+</defs>
+<path class="wire open" id="a01" data-from="E1" data-to="S1" data-pts="470,336 750,336 750,763 850,763" d="M470 336 L740.0 336.0 Q750 336 750.0 346.0 L750.0 753.0 Q750 763 760.0 763.0 L844 763" marker-end="url(#ah-open)"/><circle class="dot open" cx="470" cy="336" r="3.5"/>
+<path class="wire open" id="a02" data-from="E2" data-to="S1" data-pts="470,541 750,541 750,763 850,763" d="M470 541 L740.0 541.0 Q750 541 750.0 551.0 L750.0 753.0 Q750 763 760.0 763.0 L844 763" marker-end="url(#ah-open)"/><circle class="dot open" cx="470" cy="541" r="3.5"/>
+<path class="wire open" id="a03" data-from="E3" data-to="S1" data-pts="470,763 850,763" d="M470 763 L844 763" marker-end="url(#ah-open)"/><circle class="dot open" cx="470" cy="763" r="3.5"/>
+<path class="wire open" id="a04" data-from="E4" data-to="S1" data-pts="470,943 750,943 750,763 850,763" d="M470 943 L740.0 943.0 Q750 943 750.0 933.0 L750.0 773.0 Q750 763 760.0 763.0 L844 763" marker-end="url(#ah-open)"/><circle class="dot open" cx="470" cy="943" r="3.5"/>
+<path class="wire open" id="a05" data-from="E5" data-to="S1" data-pts="470,1089 750,1089 750,763 850,763" d="M470 1089 L740.0 1089.0 Q750 1089 750.0 1079.0 L750.0 773.0 Q750 763 760.0 763.0 L844 763" marker-end="url(#ah-open)"/><circle class="dot open" cx="470" cy="1089" r="3.5"/>
+<path class="wire nav" id="a06" data-from="S1" data-to="S2" data-pts="1192,763 1230,763 1230,401 1430,401" d="M1192 763 L1220.0 763.0 Q1230 763 1230.0 753.0 L1230.0 411.0 Q1230 401 1240.0 401.0 L1424 401" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1192" cy="763" r="3.5"/>
+<path class="wire nav" id="a07" data-from="S1" data-to="S3" data-pts="1192,763 1430,763" d="M1192 763 L1424 763" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1192" cy="763" r="3.5"/>
+<path class="wire nav" id="a08" data-from="S1" data-to="S5" data-pts="1192,763 1230,763 1230,1125 1430,1125" d="M1192 763 L1220.0 763.0 Q1230 763 1230.0 773.0 L1230.0 1115.0 Q1230 1125 1240.0 1125.0 L1424 1125" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1192" cy="763" r="3.5"/>
+<path class="wire nav" id="a09" data-from="S1" data-to="S6" data-pts="1192,763 1230,763 1230,1507 1430,1507" d="M1192 763 L1220.0 763.0 Q1230 763 1230.0 773.0 L1230.0 1497.0 Q1230 1507 1240.0 1507.0 L1424 1507" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1192" cy="763" r="3.5"/>
+<path class="wire nav" id="a10" data-from="S3" data-to="S4" data-pts="1772,713 1950,713" d="M1772 713 L1944 713" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1772" cy="713" r="3.5"/>
+<path class="wire nav" id="a11" data-from="S4" data-to="S3" data-pts="1950,813 1772,813" d="M1950 813 L1778 813" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1950" cy="813" r="3.5"/>
+<path class="wire open" id="a12" data-from="G_sel" data-to="R1" data-pts="2320,401 2600,401" d="M2320 401 L2594 401" marker-end="url(#ah-open)"/><circle class="dot open" cx="2320" cy="401" r="3.5"/>
+<path class="wire open" id="a13" data-from="G_sel" data-to="R4" data-pts="2320,1034 2600,1034" d="M2320 1034 L2594 1034" marker-end="url(#ah-open)"/><circle class="dot open" cx="2320" cy="1034" r="3.5"/>
+<path class="wire exit" id="a14" data-from="G_sel" data-to="C1" data-pts="2120,1306 2120,1894" d="M2120 1306 L2120 1888" marker-end="url(#ah-exit)"/><circle class="dot exit" cx="2120" cy="1306" r="3.5"/>
+<path class="wire exit" id="a15" data-from="L_search" data-to="B1" data-pts="1600,1698 1600,1894" d="M1600 1698 L1600 1888" marker-end="url(#ah-exit)"/><circle class="dot exit" cx="1600" cy="1698" r="3.5"/>
+<path class="wire exit" id="a16" data-from="G_front" data-to="B2" data-pts="2800,1718 2800,1894" d="M2800 1718 L2800 1888" marker-end="url(#ah-exit)"/><circle class="dot exit" cx="2800" cy="1718" r="3.5"/>
+<path class="wire open" id="a17" data-from="L_reader" data-to="S1" data-pts="3207,120 3207,50 1152,50 1152,612" d="M3207 120 L3207.0 60.0 Q3207 50 3197.0 50.0 L1162.0 50.0 Q1152 50 1152.0 60.0 L1152 606" marker-end="url(#ah-open)"/><circle class="dot open" cx="3207" cy="120" r="3.5"/>
+<path class="wire nav" id="a18" data-from="R1" data-to="R2" data-pts="2878,390 3068,390" d="M2878 390 L3062 390" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="2878" cy="390" r="3.5"/>
+<path class="wire nav" id="a19" data-from="R2" data-to="R3" data-pts="3346,390 3536,390" d="M3346 390 L3530 390" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="3346" cy="390" r="3.5"/>
+<path class="wire nav" id="a20" data-from="R3" data-to="R2" data-pts="3536,520 3346,520" d="M3536 520 L3352 520" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="3536" cy="520" r="3.5"/>
+<path class="wire nav" id="a21" data-from="G_single" data-to="R4" data-pts="2700,691 2700,891" d="M2700 691 L2700 885" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="2700" cy="691" r="3.5"/>
+<path class="wire nav" id="a22" data-from="R4" data-to="G_single" data-pts="2890,891 2890,691" d="M2890 891 L2890 697" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="2890" cy="891" r="3.5"/>
+<path class="wire open" id="a23" data-from="G_bg" data-to="L_entry" data-pts="1400,1988 320,1988 320,1698" d="M1400 1988 L330.0 1988.0 Q320 1988 320.0 1978.0 L320 1704" marker-end="url(#ah-open)"/><circle class="dot open" cx="1400" cy="1988" r="3.5"/>
+<path class="wire nav" id="a24" data-from="E5" data-to="M0" data-pts="170,1119 80,1119 80,2516 210,2516" d="M170 1119 L90.0 1119.0 Q80 1119 80.0 1129.0 L80.0 2506.0 Q80 2516 90.0 2516.0 L204 2516" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="170" cy="1119" r="3.5"/>
+<path class="wire nav" id="a25" data-from="G_menus" data-to="D1" data-pts="820,2351 820,2311 3180,2311 3180,2391" d="M820 2351 L820.0 2321.0 Q820 2311 830.0 2311.0 L3170.0 2311.0 Q3180 2311 3180.0 2321.0 L3180 2385" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="820" cy="2351" r="3.5"/>
+<path class="wire nav" id="a26" data-from="G_menus" data-to="G_chord" data-pts="940,2658 1160,2658" d="M940 2658 L1154 2658" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="940" cy="2658" r="3.5"/>
+<path class="wire nav" id="a27" data-from="V1" data-to="D3" data-pts="1450,2391 1450,2336 2630,2336 2630,2391" d="M1450 2391 L1450.0 2346.0 Q1450 2336 1460.0 2336.0 L2620.0 2336.0 Q2630 2336 2630.0 2346.0 L2630 2385" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1450" cy="2391" r="3.5"/>
+<path class="wire exit" id="a28" data-from="G_menus" data-to="Q" data-pts="640,2351 640,2201 3646,2201 3646,2054" d="M640 2351 L640.0 2211.0 Q640 2201 650.0 2201.0 L3636.0 2201.0 Q3646 2201 3646.0 2191.0 L3646 2060" marker-end="url(#ah-exit)"/><circle class="dot exit" cx="640" cy="2351" r="3.5"/>
+<path class="wire nav" id="a29" data-from="V1" data-to="D2" data-pts="1530,2444 1820,2444" d="M1530 2444 L1814 2444" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1530" cy="2444" r="3.5"/>
+<path class="wire nav" id="a30" data-from="D2" data-to="D3" data-pts="2200,2509 2430,2509" d="M2200 2509 L2424 2509" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="2200" cy="2509" r="3.5"/>
+<path class="wire nav" id="a31" data-from="D3" data-to="V2" data-pts="2510,2597 2510,2678 1530,2678" d="M2510 2597 L2510.0 2668.0 Q2510 2678 2500.0 2678.0 L1536 2678" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="2510" cy="2597" r="3.5"/>
+<path class="wire nav" id="a32" data-from="V2" data-to="V3" data-pts="1280,2711 1280,2821" d="M1280 2711 L1280 2815" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1280" cy="2711" r="3.5"/>
+<path class="wire nav" id="a33" data-from="V3" data-to="V2" data-pts="1440,2821 1440,2711" d="M1440 2821 L1440 2717" marker-end="url(#ah-nav)"/><circle class="dot nav" cx="1440" cy="2821" r="3.5"/>
+</svg>
+<article class="node mock" id="E1" style="left:170px;top:250px;width:300px;height:173px"><div class="nh"><span class="nid">E1</span><span class="nt">启动 app</span><span class="tag mock">示意</span></div><div class="mb" style="height:72px"><div class="center"><div class="dock"><span class="di g1"></span><span class="di g2"></span><span class="di app"><span class="bk"></span><u></u></span><span class="di g3"></span></div></div><div class="applabel">双击「好查经.app」 / make run</div></div><div class="cap">启动即显示搜索窗口，并注册 ⌥Space 与 Space+P。未授予辅助功能权限时，系统同时弹出权限提示 → D2。</div></article>
+<article class="node mock" id="E2" style="left:170px;top:473px;width:300px;height:136px"><div class="nh"><span class="nid">E2</span><span class="nt">Dock 图标</span><span class="tag mock">示意</span></div><div class="mb" style="height:50px"><div class="center"><div class="dock"><span class="di g1"></span><span class="di g2"></span><span class="di app"><span class="bk"></span><u></u></span><span class="di g3"></span></div></div></div><div class="cap">没有可见窗口时点击才会带回搜索窗口；已有窗口时只是激活 app。右键「退出」不会真的退出 → B2。</div></article>
+<article class="node mock" id="E3" style="left:170px;top:659px;width:300px;height:173px"><div class="nh"><span class="nid">E3</span><span class="nt">全局快捷键</span><span class="tag mock">示意</span></div><div class="mb" style="height:72px"><div class="keys"><span class="key">⌥</span><span class="plus">+</span><span class="key">Space</span></div><div class="keys"><span class="key">Space 按住</span><span class="plus">+</span><span class="key">P</span></div></div><div class="cap">⌥Space 无需权限、始终可用。按住 Space 再按 P 要先授予辅助功能权限：Space 最多被扣住 0.35 秒，期间按 P 才触发；好查经自己在前台时不拦截。</div></article>
+<article class="node mock" id="E4" style="left:170px;top:882px;width:300px;height:122px"><div class="nh"><span class="nid">E4</span><span class="nt">⌘F · 文件 → 搜索经文</span><span class="tag mock">示意</span></div><div class="mb" style="height:36px"><div class="keys"><span class="key">⌘</span><span class="plus">+</span><span class="key">F</span></div></div><div class="cap">只在好查经处于前台时有效（例如正在阅读窗口里）。只显示、不收起。</div></article>
+<article class="node mock" id="E5" style="left:170px;top:1054px;width:300px;height:110px"><div class="nh"><span class="nid">E5</span><span class="nt">菜单栏图标</span><span class="tag mock">示意</span></div><div class="mb" style="height:24px"><div class="mbar right"><span>···</span><span class=""><span class="bk"></span></span><span>周五 9:41</span></div></div><div class="cap">book.closed 图标常驻菜单栏，app 在后台、没有任何窗口时也能点。</div></article>
+<article class="node real" id="S1" style="left:850px;top:612px;width:342px;height:302px"><div class="nh"><span class="nid">S1</span><span class="nt">空状态 · 刚唤出</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：搜索窗口空状态" data-cap="S1 · 空状态 · 刚唤出"><div class="tb"><i></i><i></i><i></i><b>好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/search-empty.dark.png"><img src="shots/search-empty.light.png" alt="搜索窗口空状态" width="320" height="194" loading="lazy"></picture></div><div class="cap">输入框自动获得焦点，中间是写法提示和示例。把输入清空也会回到这里。</div></article>
+<article class="node real" id="S2" style="left:1430px;top:250px;width:342px;height:302px"><div class="nh"><span class="nid">S2</span><span class="nt">唯一结果 · lq 13:4-8</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：搜索 lq 13:4-8 的唯一结果" data-cap="S2 · 唯一结果 · lq 13:4-8"><div class="tb"><i></i><i></i><i></i><b>好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/search-result-verse.dark.png"><img src="shots/search-result-verse.light.png" alt="搜索 lq 13:4-8 的唯一结果" width="320" height="194" loading="lazy"></picture></div><div class="cap">左侧一条结果并自动选中；右侧预览滚到第 4 节，高亮第 4-8 节。</div></article>
+<article class="node real" id="S3" style="left:1430px;top:612px;width:342px;height:302px"><div class="nh"><span class="nid">S3</span><span class="nt">多条结果 · 选中第 1 条</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：搜索 yh 3:16，第一条选中" data-cap="S3 · 多条结果 · 选中第 1 条"><div class="tb"><i></i><i></i><i></i><b>好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/search-result-multi.dark.png"><img src="shots/search-result-multi.light.png" alt="搜索 yh 3:16，第一条选中" width="320" height="194" loading="lazy"></picture></div><div class="cap">yh 3:16 同时命中约翰福音、约翰一书；默认选中第一条并在右侧预览。</div></article>
+<article class="node real" id="S4" style="left:1950px;top:612px;width:342px;height:302px"><div class="nh"><span class="nid">S4</span><span class="nt">多条结果 · 选中第 2 条</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：搜索 yh 3:16，第二条选中" data-cap="S4 · 多条结果 · 选中第 2 条"><div class="tb"><i></i><i></i><i></i><b>好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/search-result-multi-second.dark.png"><img src="shots/search-result-multi-second.light.png" alt="搜索 yh 3:16，第二条选中" width="320" height="194" loading="lazy"></picture></div><div class="cap">选中项和右侧预览一起切到约翰一书 3:16；到列表两端停住，不循环。</div></article>
+<article class="node real" id="S5" style="left:1430px;top:974px;width:342px;height:302px"><div class="nh"><span class="nid">S5</span><span class="nt">只有书名 · 约</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：搜索 约，列出书卷" data-cap="S5 · 只有书名 · 约"><div class="tb"><i></i><i></i><i></i><b>好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/search-result-books.dark.png"><img src="shots/search-result-books.light.png" alt="搜索 约，列出书卷" width="320" height="194" loading="lazy"></picture></div><div class="cap">不带章节：只列出匹配的书卷（简称 · 章数）；⏎ 打开该书第 1 章。</div></article>
+<article class="node real" id="S6" style="left:1430px;top:1356px;width:342px;height:302px"><div class="nh"><span class="nid">S6</span><span class="nt">无匹配 · yhfyx</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：搜索 yhfyx 无匹配" data-cap="S6 · 无匹配 · yhfyx"><div class="tb"><i></i><i></i><i></i><b>好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/search-no-match.dark.png"><img src="shots/search-no-match.light.png" alt="搜索 yhfyx 无匹配" width="320" height="194" loading="lazy"></picture></div><div class="cap">「没有匹配的书卷或章节」加规则说明。没有选中项：⏎ ⇧⏎ ⌘⏎ 都无效，⌘D 置灰。</div></article>
+<article class="node real" id="R1" style="left:2600px;top:250px;width:278px;height:411px"><div class="nh"><span class="nid">R1</span><span class="nt">带高亮 · 13:4-8</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：阅读窗口 哥林多前书 13:4-8 高亮" data-cap="R1 · 带高亮 · 13:4-8"><div class="tb"><i></i><i></i><i></i><b>哥林多前书 13:4-8</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/reader-highlight.dark.png"><img src="shots/reader-highlight.light.png" alt="阅读窗口 哥林多前书 13:4-8 高亮" width="256" height="288" loading="lazy"></picture></div><div class="cap">由 ⏎ 打开：滚到第 4 节并高亮 4-8 节。标题栏带节号，窗口内工具栏只写「哥林多前书 13」。</div></article>
+<article class="node real" id="R2" style="left:3068px;top:250px;width:278px;height:411px"><div class="nh"><span class="nid">R2</span><span class="nt">整章 · 无高亮</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：阅读窗口 约翰福音 3 整章" data-cap="R2 · 整章 · 无高亮"><div class="tb"><i></i><i></i><i></i><b>约翰福音 3</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/reader-chapter.dark.png"><img src="shots/reader-chapter.light.png" alt="阅读窗口 约翰福音 3 整章" width="256" height="288" loading="lazy"></picture></div><div class="cap">翻章之后（或查询不带节号）：整章、无高亮，‹ › 都可用，窗口标题变为「书名 章」。</div></article>
+<article class="node real" id="R3" style="left:3536px;top:250px;width:278px;height:411px"><div class="nh"><span class="nid">R3</span><span class="nt">首章 · ‹ 禁用</span><span class="tag real">实拍</span></div><div class="win shot" tabindex="0" role="button" aria-label="放大查看：阅读窗口 创世记 1 上一章禁用" data-cap="R3 · 首章 · ‹ 禁用"><div class="tb"><i></i><i></i><i></i><b>创世记 1</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/reader-first-chapter.dark.png"><img src="shots/reader-first-chapter.light.png" alt="阅读窗口 创世记 1 上一章禁用" width="256" height="288" loading="lazy"></picture></div><div class="cap">已是第 1 章：‹ 禁用、← 无效。翻到末章时 › 同理禁用（没有截图）。</div></article>
+<article class="node mock" id="R4" style="left:2600px;top:891px;width:380px;height:286px"><div class="nh"><span class="nid">R4</span><span class="nt">多个阅读窗口 · 错开排列</span><span class="tag mock">示意</span></div><div class="mb" style="height:200px"><div class="stack"><div class="win fw" style="left:0px;top:0px"><div class="tb"><i></i><i></i><i></i><b>哥林多前书 13:4-8</b></div><div class="fwb"><s class="" style="width:92%"></s><s class="" style="width:80%"></s><s class="" style="width:95%"></s><s class="hl" style="width:70%"></s><s class="hl" style="width:88%"></s><s class="hl" style="width:60%"></s><s class="" style="width:90%"></s><s class="" style="width:76%"></s><s class="" style="width:84%"></s></div></div><div class="win fw" style="left:34px;top:30px"><div class="tb"><i></i><i></i><i></i><b>哥林多前书 13:4-8</b></div><div class="fwb"><s class="" style="width:92%"></s><s class="" style="width:80%"></s><s class="" style="width:95%"></s><s class="hl" style="width:70%"></s><s class="hl" style="width:88%"></s><s class="hl" style="width:60%"></s><s class="" style="width:90%"></s><s class="" style="width:76%"></s><s class="" style="width:84%"></s></div></div></div></div><div class="cap">新窗口内容相同、沿用原窗口大小，从最前面的阅读窗口向右下错开一格；数量不限，可分别翻章对照。</div></article>
+<article class="node mock" id="B1" style="left:1430px;top:1894px;width:340px;height:197px"><div class="nh"><span class="nid">B1</span><span class="nt">搜索窗口已隐藏</span><span class="tag mock">示意</span></div><div class="mb" style="height:96px"><div class="ghost">好查经<br><small>搜索窗口 · 已隐藏</small></div><div class="win fw mini" style="left:188px;top:8px"><div class="tb"><i></i><i></i><i></i></div><div class="fwb"><s style="width:90%"></s><s style="width:70%"></s><s style="width:84%"></s></div></div></div><div class="cap">orderOut：只是收起，app 与快捷键照常。阅读窗口（如有）保持原样；一个窗口都不剩时就是 B2。下次唤出时输入框已清空。</div></article>
+<article class="node mock" id="C1" style="left:1950px;top:1894px;width:340px;height:197px"><div class="nh"><span class="nid">C1</span><span class="nt">已复制到剪贴板 · 搜索隐藏</span><span class="tag mock">示意</span></div><div class="mb" style="height:96px"><pre class="clip">爱是恒久忍耐，又有恩慈；爱是不嫉妒；…
+不做害羞的事，不求自己的益处，…
+…（第 4-8 节，每节一行）
+—— 哥林多前书 13:4-8 (和合本)</pre></div><div class="cap">格式：经文 + 换行 +「—— 引用 (和合本)」。带节号的查询不加行号，整章 / 只有书名的结果每行带节号。没有任何「已复制」提示。</div></article>
+<article class="node mock" id="B2" style="left:2600px;top:1894px;width:400px;height:186px"><div class="nh"><span class="nid">B2</span><span class="nt">后台驻留 · 没有任何窗口</span><span class="tag mock">示意</span></div><div class="mb" style="height:100px"><div class="mbar right"><span>···</span><span class=""><span class="bk"></span></span><span>周五 9:41</span></div><div class="desk">没有任何窗口</div><div class="center"><div class="dock"><span class="di g1"></span><span class="di g2"></span><span class="di app"><span class="bk"></span><u></u></span><span class="di g3"></span></div></div></div><div class="cap">窗口全部收起，进程仍在：菜单栏图标、Dock 图标（带运行圆点）和两个全局快捷键照常工作。</div></article>
+<article class="node mock" id="Q" style="left:3476px;top:1894px;width:340px;height:160px"><div class="nh"><span class="nid">Q</span><span class="nt">真正退出 · 进程结束</span><span class="tag mock">示意</span></div><div class="mb" style="height:74px"><div class="mbar right"><span>···</span><span>周五 9:41</span></div><div class="center"><div class="dock"><span class="di g1"></span><span class="di g2"></span><span class="di app"><span class="bk"></span></span><span class="di g3"></span></div></div></div><div class="cap">只有「退出好查经」会到这里；系统注销、关机、重启带退出原因，也会正常退出。快捷键随之失效。</div></article>
+<article class="node mock" id="M0" style="left:210px;top:2391px;width:330px;height:228px"><div class="nh"><span class="nid">M0</span><span class="nt">菜单栏图标菜单</span><span class="tag mock">示意</span></div><div class="mb" style="height:142px"><div class="mbar right"><span>···</span><span class="on"><span class="bk"></span></span><span>周五 9:41</span></div><div class="menu" style="width:306px;height:118px"><div class="mi "><span>打开搜索  (⌥Space / Space+P)</span><em></em></div><div class="sep"></div><div class="mi "><span>停用 Space+P 快捷键</span><em></em></div><div class="sep"></div><div class="mi "><span>关于好查经</span><em></em></div><div class="mi "><span>退出好查经</span><em></em></div></div></div><div class="cap">「打开搜索」只显示不收起（→ S1，见 E5）。Space+P 那一项的标题有三种，见 V1-V3。</div></article>
+<article class="node mock" id="M1" style="left:580px;top:2391px;width:330px;height:303px"><div class="nh"><span class="nid">M1</span><span class="nt">「好查经」菜单</span><span class="tag mock">示意</span></div><div class="mb" style="height:217px"><div class="mbar"><span class="apple"></span><span class="on"><b>好查经</b></span><span class="">文件</span><span class="">编辑</span><span class="">窗口</span></div><div class="menu" style="width:306px;height:193px"><div class="mi "><span>关于好查经</span><em></em></div><div class="sep"></div><div class="mi "><span>停用 Space+P 快捷键</span><em></em></div><div class="sep"></div><div class="mi "><span>隐藏好查经</span><em>⌘H</em></div><div class="mi "><span>隐藏其他</span><em>⌥⌘H</em></div><div class="mi "><span>显示全部</span><em></em></div><div class="sep"></div><div class="mi "><span>关闭所有窗口（保留后台）</span><em>⌘Q</em></div><div class="mi "><span>退出好查经</span><em></em></div></div></div><div class="cap">⌘Q 的位置放的是「关闭所有窗口（保留后台）」（→ B2）；「退出好查经」没有快捷键。</div></article>
+<article class="node mock" id="M2" style="left:3450px;top:2391px;width:320px;height:212px"><div class="nh"><span class="nid">M2</span><span class="nt">「文件」菜单</span><span class="tag mock">示意</span></div><div class="mb" style="height:111px"><div class="mbar"><span class="apple"></span><span class=""><b>好查经</b></span><span class="on">文件</span><span class="">编辑</span><span class="">窗口</span></div><div class="menu" style="width:296px;height:87px"><div class="mi "><span>搜索经文</span><em>⌘F</em></div><div class="mi "><span>在新窗口打开经文</span><em>⌘D</em></div><div class="sep"></div><div class="mi "><span>关闭窗口</span><em>⌘W</em></div></div></div><div class="cap">⌘D：阅读窗口在前 = 复制该窗口；搜索窗口在前且有选中项 = 新窗口打开；否则置灰。⌘W 对搜索窗口等同 esc。</div></article>
+<article class="node mock" id="M3" style="left:3450px;top:2643px;width:320px;height:263px"><div class="nh"><span class="nid">M3</span><span class="nt">「编辑」「窗口」菜单</span><span class="tag mock">示意</span></div><div class="mb" style="height:177px"><div class="mbar"><span class="apple"></span><span class=""><b>好查经</b></span><span class="">文件</span><span class="on">编辑</span><span class="">窗口</span></div><div class="two"><div class="menu" style="width:145px;height:153px"><div class="mi "><span>撤销</span><em>⌘Z</em></div><div class="mi "><span>重做</span><em>⇧⌘Z</em></div><div class="sep"></div><div class="mi "><span>剪切</span><em>⌘X</em></div><div class="mi "><span>拷贝</span><em>⌘C</em></div><div class="mi "><span>粘贴</span><em>⌘V</em></div><div class="mi "><span>全选</span><em>⌘A</em></div></div><div class="menu" style="width:145px;height:87px"><div class="mi "><span>最小化</span><em>⌘M</em></div><div class="mi "><span>缩放</span><em></em></div><div class="sep"></div><div class="mi "><span>前置全部窗口</span><em></em></div></div></div></div><div class="cap">标准项，不引起界面跳转；「窗口」菜单末尾由系统列出所有打开的窗口。</div></article>
+<article class="node mock" id="V1" style="left:1190px;top:2391px;width:340px;height:135px"><div class="nh"><span class="nid">V1</span><span class="nt">Space+P · 未授权</span><span class="tag mock">示意</span></div><div class="mb" style="height:34px"><div class="menu" style="width:316px;height:34px"><div class="mi hl"><span>开启 Space+P 快捷键（需授权辅助功能）…</span><em></em></div></div></div><div class="cap">还没有辅助功能权限，事件 tap 起不来。点击 = 帮用户开启：请求权限（D2），直接打开系统设置的辅助功能页（D3），并每 2 秒轮询，授权后自动变成 V2。</div></article>
+<article class="node mock" id="V2" style="left:1190px;top:2606px;width:340px;height:105px"><div class="nh"><span class="nid">V2</span><span class="nt">Space+P · 已启用</span><span class="tag mock">示意</span></div><div class="mb" style="height:34px"><div class="menu" style="width:316px;height:34px"><div class="mi hl"><span>停用 Space+P 快捷键</span><em></em></div></div></div><div class="cap">事件 tap 运行中，Space+P 可用。点击 = 停用。</div></article>
+<article class="node mock" id="V3" style="left:1190px;top:2821px;width:340px;height:105px"><div class="nh"><span class="nid">V3</span><span class="nt">Space+P · 已停用</span><span class="tag mock">示意</span></div><div class="mb" style="height:34px"><div class="menu" style="width:316px;height:34px"><div class="mi hl"><span>启用 Space+P 快捷键</span><em></em></div></div></div><div class="cap">已授权、手动停用。点击 = 重新启用；⌥Space 不受影响。</div></article>
+<article class="node real" id="D1" style="left:2970px;top:2391px;width:420px;height:338px"><div class="nh"><span class="nid">D1</span><span class="nt">关于好查经（窗口）</span><span class="tag real">实拍</span></div><div class="center"><div class="win shot" tabindex="0" role="button" aria-label="放大查看：关于好查经窗口" data-cap="D1 · 关于好查经（窗口）"><div class="tb"><i></i><i></i><i></i><b>关于好查经</b></div><picture><source media="(prefers-color-scheme: dark)" srcset="shots/about.dark.png"><img src="shots/about.light.png" alt="关于好查经窗口" width="176" height="200" loading="lazy"></picture></div></div><div class="cap">非模态的独立窗口（440×500），里面没有按钮，用红色关闭按钮或 ⌘W 关闭；已打开时再选「关于好查经」只是把它带到最前。「github.com/Lamonkey」是链接，点击后在浏览器打开 https://github.com/Lamonkey。</div></article>
+<article class="node mock" id="D2" style="left:1820px;top:2391px;width:380px;height:251px"><div class="nh"><span class="nid">D2</span><span class="nt">系统权限提示（辅助功能）</span><span class="tag mock">示意</span></div><div class="mb" style="height:150px"><div class="dlg"><div class="dicon"><span class="bk"></span></div><b>“好查经”想要使用辅助功能来控制这台电脑。</b><p>请在“系统设置”的“隐私与安全性”&gt;“辅助功能”中授予此应用程序访问权限。</p><div class="btns"><span class="btn pri">打开系统设置</span><span class="btn">拒绝</span></div></div></div><div class="cap">macOS 系统对话框，文案以系统为准。首次启动未授权时自动弹出；点击 V1 也会调用 requestPermission，但系统只弹一次这个提示，所以 V1 同时直接打开 D3。</div></article>
+<article class="node mock" id="D3" style="left:2430px;top:2391px;width:400px;height:206px"><div class="nh"><span class="nid">D3</span><span class="nt">系统设置 · 辅助功能</span><span class="tag mock">示意</span></div><div class="mb" style="height:120px"><div class="pane"><div class="ph">隐私与安全性 › 辅助功能</div><p>允许下面的应用程序控制你的电脑。</p><div class="prow"><span><span class="bk"></span> 好查经</span><span class="tg on"></span></div><div class="prow"><span>其他 App</span><span class="tg"></span></div></div></div><div class="cap">点击 V1 时由 app 直接打开，也可从 D2 进入。README：ad-hoc 签名重新构建后，可能要删掉旧条目再勾选一次。</div></article>
+<aside class="note" id="note0" style="left:1950px;top:250px;width:340px;height:156px"><div class="nh"><span class="nt">鼠标与选择</span></div><ul><li>点击某一行 = 选中它；再点已选中的行 = ⏎ 打开。</li><li>↑ ↓ 与 ⌃P ⌃N 等价，由窗口级按键监听处理，输入框仍保持焦点。</li><li>每次改动输入，选中项都回到第一条。</li><li>底部提示栏只写了 ↑↓ ⏎ ⇧⏎ ⌘⏎ esc，没有提 ⌘D、⌘W、⌃N ⌃P。</li></ul></aside>
+<aside class="note" id="note1" style="left:1950px;top:974px;width:340px;height:137px"><div class="nh"><span class="nt">匹配规则（README）</span></div><ul><li>书名只做精确规则匹配：拼音首字母、拼音前缀、中文简称或全名；* 任意个音节，? 一个音节。</li><li>候选书卷没有该章或该节会被排除，所以 yh 4:24 只剩约翰福音。</li><li>章节分隔可用空格、冒号、全角冒号、点、逗号。</li></ul></aside>
+<aside class="note" id="note2" style="left:3068px;top:891px;width:746px;height:145px"><div class="nh"><span class="nt">阅读窗口规则（ReaderWindow.swift）</span></div><ul><li>窗口标题 = 经文引用：带节号时「哥林多前书 13:4-8」，翻章后变「哥林多前书 14」。</li><li>⏎ 总是用「最前面的可见阅读窗口」显示新经文，原内容被替换；想保留就用 ⇧⏎ / ⌘D。</li><li>第一个阅读窗口居中出现，并沿用上一次关闭的阅读窗口的大小；之后的窗口从最前面的窗口错开。</li><li>← → 是工具栏按钮的快捷键，不带修饰键；「窗口」菜单由系统列出全部打开的窗口。</li><li>⌘W 只关当前阅读窗口；关到一个不剩，app 也不退出（→ B2）。</li></ul></aside>
+<div class="lbl open" data-a="a01" data-cx="610" data-cy="336" data-w="102" data-h="41" style="left:610px;top:336px">启动 app<small>直接显示搜索窗口</small></div>
+<div class="lbl open" data-a="a02" data-cx="610" data-cy="541" data-w="104" data-h="41" style="left:610px;top:541px">点击 Dock 图标<small>仅当没有可见窗口</small></div>
+<div class="lbl open" data-a="a03" data-cx="610" data-cy="763" data-w="222" data-h="41" style="left:610px;top:763px"><kbd>⌥Space</kbd> 或按住 <kbd>Space</kbd> 再按 <kbd>P</kbd><small>搜索已在最前时再按 ⌥Space = 收起</small></div>
+<div class="lbl open" data-a="a04" data-cx="610" data-cy="943" data-w="99" data-h="41" style="left:610px;top:943px"><kbd>⌘F</kbd><small>文件 → 搜索经文</small></div>
+<div class="lbl open" data-a="a05" data-cx="610" data-cy="1089" data-w="236" data-h="41" style="left:610px;top:1089px">点图标 → 打开搜索<small>菜单项「打开搜索&nbsp; (⌥Space / Space+P)」</small></div>
+<div class="lbl nav" data-a="a06" data-cx="1335" data-cy="401" data-w="114" data-h="41" style="left:1335px;top:401px">输入 <code>lq 13:4-8</code><small>唯一命中 · 带节范围</small></div>
+<div class="lbl nav" data-a="a07" data-cx="1335" data-cy="763" data-w="91" data-h="41" style="left:1335px;top:763px">输入 <code>yh 3:16</code><small>命中多卷书</small></div>
+<div class="lbl nav" data-a="a08" data-cx="1335" data-cy="1125" data-w="60" data-h="41" style="left:1335px;top:1125px">输入 <code>约</code><small>只有书名</small></div>
+<div class="lbl nav" data-a="a09" data-cx="1335" data-cy="1507" data-w="82" data-h="41" style="left:1335px;top:1507px">输入 <code>yhfyx</code><small>没有任何匹配</small></div>
+<div class="lbl nav" data-a="a10" data-cx="1861" data-cy="713" data-w="86" data-h="41" style="left:1861px;top:713px"><kbd>↓</kbd> / <kbd>⌃N</kbd><small>或点击第二行</small></div>
+<div class="lbl nav" data-a="a11" data-cx="1861" data-cy="813" data-w="86" data-h="41" style="left:1861px;top:813px"><kbd>↑</kbd> / <kbd>⌃P</kbd><small>或点击第一行</small></div>
+<div class="lbl open" data-a="a12" data-cx="2460" data-cy="401" data-w="186" data-h="55" style="left:2460px;top:401px"><kbd>⏎</kbd> 打开<small>沿用最前面的阅读窗口，没有则新建</small><small>搜索窗口随即隐藏</small></div>
+<div class="lbl open" data-a="a13" data-cx="2460" data-cy="1034" data-w="186" data-h="55" style="left:2460px;top:1034px"><kbd>⇧⏎</kbd> / <kbd>⌘D</kbd> 新窗口打开<small>总是新建阅读窗口，已有窗口时错开</small><small>搜索窗口随即隐藏</small></div>
+<div class="lbl exit" data-a="a14" data-cx="2120" data-cy="1758" data-w="144" data-h="41" style="left:2120px;top:1758px"><kbd>⌘⏎</kbd> 复制经文<small>写入剪贴板，搜索窗口隐藏</small></div>
+<div class="lbl exit" data-a="a15" data-cx="1600" data-cy="1758" data-w="197" data-h="41" style="left:1600px;top:1758px"><kbd>esc</kbd> · <kbd>⌘W</kbd> · 再按 <kbd>⌥Space</kbd><small>只是隐藏，app 继续运行</small></div>
+<div class="lbl exit" data-a="a16" data-cx="2800" data-cy="1758" data-w="247" data-h="41" style="left:2800px;top:1758px"><kbd>⌘Q</kbd> · Dock「退出」· 关掉最后一个窗口<small>退出请求被取消，只把窗口全部收起</small></div>
+<div class="lbl open" data-a="a17" data-cx="2200" data-cy="50" data-w="367" data-h="41" style="left:2200px;top:50px"><kbd>⌥Space</kbd> / <kbd>⌘F</kbd> 从阅读窗口回到搜索<small>搜索窗口此前已隐藏，所以输入被清空；Space+P 在本 app 前台时不拦截</small></div>
+<div class="lbl nav" data-a="a18" data-cx="2973" data-cy="390" data-w="110" data-h="41" style="left:2973px;top:390px"><kbd>←</kbd> <kbd>→</kbd> 或 ‹ ›<small>翻章：高亮消失</small></div>
+<div class="lbl nav" data-a="a19" data-cx="3441" data-cy="390" data-w="108" data-h="41" style="left:3441px;top:390px"><kbd>←</kbd> 翻到第 1 章<small>‹ 变为禁用</small></div>
+<div class="lbl nav" data-a="a20" data-cx="3441" data-cy="520" data-w="70" data-h="41" style="left:3441px;top:520px"><kbd>→</kbd> 或 ›<small>下一章</small></div>
+<div class="lbl nav" data-a="a21" data-cx="2700" data-cy="751" data-w="134" data-h="41" style="left:2700px;top:751px"><kbd>⌘D</kbd> 或 ⧉ 按钮<small>同一处经文复制到新窗口</small></div>
+<div class="lbl nav" data-a="a22" data-cx="2890" data-cy="831" data-w="81" data-h="41" style="left:2890px;top:831px"><kbd>⌘W</kbd><small>关到只剩一个</small></div>
+<div class="lbl open" data-a="a23" data-cx="860" data-cy="1988" data-w="126" data-h="41" style="left:860px;top:1988px">用任一入口唤回搜索<small>输入框是清空的</small></div>
+<div class="lbl nav" data-a="a24" data-cx="80" data-cy="2034" data-w="102" data-h="41" style="left:80px;top:2034px">点击菜单栏图标<small>弹出菜单</small></div>
+<div class="lbl nav" data-a="a25" data-cx="2320" data-cy="2311" data-w="90" data-h="27" style="left:2320px;top:2311px">关于好查经</div>
+<div class="lbl nav" data-a="a26" data-cx="1050" data-cy="2658" data-w="158" data-h="41" style="left:1050px;top:2658px">点击 Space+P 那一项<small>标题写的是点击后会做的事</small></div>
+<div class="lbl nav" data-a="a27" data-cx="2040" data-cy="2336" data-w="250" data-h="41" style="left:2040px;top:2336px">同一次点击：直接打开系统设置<small>隐私与安全性 › 辅助功能，并开始每 2 秒轮询</small></div>
+<div class="lbl exit" data-a="a28" data-cx="2460" data-cy="2201" data-w="113" data-h="41" style="left:2460px;top:2201px">退出好查经<small>唯一真正退出的命令</small></div>
+<div class="lbl nav" data-a="a29" data-cx="1690" data-cy="2444" data-w="194" data-h="41" style="left:1690px;top:2444px">点击「开启 Space+P 快捷键…」<small>请求权限；系统提示只弹一次</small></div>
+<div class="lbl nav" data-a="a30" data-cx="2315" data-cy="2509" data-w="90" data-h="27" style="left:2315px;top:2509px">打开系统设置</div>
+<div class="lbl nav" data-a="a31" data-cx="2075" data-cy="2678" data-w="218" data-h="41" style="left:2075px;top:2678px">打开「好查经」开关<small>每 2 秒轮询一次，检测到授权后自动启用</small></div>
+<div class="lbl nav" data-a="a32" data-cx="1280" data-cy="2766" data-w="86" data-h="27" style="left:1280px;top:2766px">点击 → 停用</div>
+<div class="lbl nav" data-a="a33" data-cx="1440" data-cy="2766" data-w="86" data-h="27" style="left:1440px;top:2766px">点击 → 启用</div>
+</div></div></div>
+<main class="below"><h2>状态清单</h2><div class="tw"><table><thead><tr><th>编号</th><th>状态</th><th>类型</th><th>截图（都在 docs/ui/shots/ 下，各有 light / dark 两张）</th><th>来源</th></tr></thead><tbody>
+<tr><td>E1</td><td>启动 app</td><td>示意</td><td>无，按源码字符串绘制</td><td>main.swift · AppDelegate.applicationDidFinishLaunching</td></tr>
+<tr><td>E2</td><td>Dock 图标</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.applicationShouldHandleReopen</td></tr>
+<tr><td>E3</td><td>全局快捷键</td><td>示意</td><td>无，按源码字符串绘制</td><td>GlobalHotkey.swift · SpaceChordMonitor.swift · SearchWindow.toggle()</td></tr>
+<tr><td>E4</td><td>⌘F · 文件 → 搜索经文</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.buildMainMenu（文件）· showSearch</td></tr>
+<tr><td>E5</td><td>菜单栏图标</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.installStatusItem</td></tr>
+<tr><td>S1</td><td>空状态 · 刚唤出</td><td>实拍</td><td><code>search-empty.light.png</code> <code>search-empty.dark.png</code></td><td>SearchView.emptyState · SearchWindow.show()</td></tr>
+<tr><td>S2</td><td>唯一结果 · lq 13:4-8</td><td>实拍</td><td><code>search-result-verse.light.png</code> <code>search-result-verse.dark.png</code></td><td>SearchView · PassageView</td></tr>
+<tr><td>S3</td><td>多条结果 · 选中第 1 条</td><td>实拍</td><td><code>search-result-multi.light.png</code> <code>search-result-multi.dark.png</code></td><td>SearchView.resultList · SearchViewModel</td></tr>
+<tr><td>S4</td><td>多条结果 · 选中第 2 条</td><td>实拍</td><td><code>search-result-multi-second.light.png</code> <code>search-result-multi-second.dark.png</code></td><td>SearchWindow 按键监听 · SearchViewModel.moveSelection</td></tr>
+<tr><td>S5</td><td>只有书名 · 约</td><td>实拍</td><td><code>search-result-books.light.png</code> <code>search-result-books.dark.png</code></td><td>SearchEngine（只有书名 → 第 1 章）</td></tr>
+<tr><td>S6</td><td>无匹配 · yhfyx</td><td>实拍</td><td><code>search-no-match.light.png</code> <code>search-no-match.dark.png</code></td><td>SearchView.emptyState</td></tr>
+<tr><td>R1</td><td>带高亮 · 13:4-8</td><td>实拍</td><td><code>reader-highlight.light.png</code> <code>reader-highlight.dark.png</code></td><td>ReaderWindow.swift · PassageView</td></tr>
+<tr><td>R2</td><td>整章 · 无高亮</td><td>实拍</td><td><code>reader-chapter.light.png</code> <code>reader-chapter.dark.png</code></td><td>ReaderModel.step</td></tr>
+<tr><td>R3</td><td>首章 · ‹ 禁用</td><td>实拍</td><td><code>reader-first-chapter.light.png</code> <code>reader-first-chapter.dark.png</code></td><td>ReaderView（.disabled）</td></tr>
+<tr><td>R4</td><td>多个阅读窗口 · 错开排列</td><td>示意</td><td>无，按源码字符串绘制</td><td>ReaderWindows.place（cascade）</td></tr>
+<tr><td>B1</td><td>搜索窗口已隐藏</td><td>示意</td><td>无，按源码字符串绘制</td><td>SearchWindow.hide()</td></tr>
+<tr><td>C1</td><td>已复制到剪贴板 · 搜索隐藏</td><td>示意</td><td>无，按源码字符串绘制</td><td>SearchViewModel.copySelected()</td></tr>
+<tr><td>B2</td><td>后台驻留 · 没有任何窗口</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.applicationShouldTerminate · closeAllWindows</td></tr>
+<tr><td>Q</td><td>真正退出 · 进程结束</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.quit（reallyQuit）</td></tr>
+<tr><td>M0</td><td>菜单栏图标菜单</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.installStatusItem</td></tr>
+<tr><td>M1</td><td>「好查经」菜单</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.buildMainMenu</td></tr>
+<tr><td>M2</td><td>「文件」菜单</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.buildMainMenu · validateMenuItem</td></tr>
+<tr><td>M3</td><td>「编辑」「窗口」菜单</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.buildMainMenu</td></tr>
+<tr><td>V1</td><td>Space+P · 未授权</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.updateChordMenu · toggleChord · openAccessibilitySettings · waitForPermission</td></tr>
+<tr><td>V2</td><td>Space+P · 已启用</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.updateChordMenu · toggleChord</td></tr>
+<tr><td>V3</td><td>Space+P · 已停用</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.updateChordMenu · toggleChord</td></tr>
+<tr><td>D1</td><td>关于好查经（窗口）</td><td>实拍</td><td><code>about.light.png</code> <code>about.dark.png</code></td><td>AboutWindow.swift（AboutView · AboutWindowController）· AppDelegate.about()</td></tr>
+<tr><td>D2</td><td>系统权限提示（辅助功能）</td><td>示意</td><td>无，按源码字符串绘制</td><td>SpaceChordMonitor.requestPermission()</td></tr>
+<tr><td>D3</td><td>系统设置 · 辅助功能</td><td>示意</td><td>无，按源码字符串绘制</td><td>AppDelegate.toggleChord → openAccessibilitySettings</td></tr>
+</tbody></table></div><h2>发现的问题</h2><p class="lead">画这张图时从截图和源码里看到的不一致或可以改进的地方，按对用户的影响大致排序。</p><ol class="issues">
+<li><strong>章标题几乎永远看不到。</strong>PassageView 用 <code>scrollTo(目标节, anchor: .top)</code>，没有高亮时目标是第 1 节，于是「书名 第 N 章」这一行总被滚出可视区（S2-S5、R2、R3 都看不到）；只有整章一屏放得下、滚不动时才露出来（R1）。</li>
+<li><strong>高亮节紧贴上方分隔线。</strong>同一个原因：第一条高亮节顶到分隔线，没有留白，上一节的语境也看不到（S2、S3、S4）。可以改为滚到目标节的前一节，或给锚点留出顶部间距。</li>
+<li><strong>阅读窗口里同一个引用出现三处且互不一致。</strong>R1 的标题栏是「哥林多前书 13:4-8」，工具栏中间是「哥林多前书 13」，正文上方还有「哥林多前书 第 13 章」。工具栏标题和章标题信息重复，节号只出现在标题栏。</li>
+<li><strong>选中色是红色。</strong>结果行用 <code>Color.accentColor</code>，高亮用它的 18% 透明度。这台 Mac 的系统强调色是红色，所以截图里选中是红色，看上去像报错；换一台机器会是别的颜色，截图不可复现。可考虑给 app 固定一个强调色。</li>
+<li><strong>⌘⏎ 复制之后没有任何反馈。</strong><code>copySelected()</code> 写完剪贴板就直接隐藏窗口，没有「已复制」提示；S6 无匹配时按 ⏎ / ⌘⏎ 也毫无反应。</li>
+<li><strong>底部提示栏不完整。</strong>只列了 ↑↓ ⏎ ⇧⏎ ⌘⏎ esc；⌘D、⌘W、⌃N ⌃P 和「点击已选中的行 = 打开」都没有提示。</li>
+<li><strong>⌘Q 和 Dock「退出」不退出。</strong>这是有意设计，菜单里也改名为「关闭所有窗口（保留后台）」，但 Dock 右键菜单的「退出」是系统文案，点了之后图标仍带运行圆点，容易被当成卡死；真正的「退出好查经」没有快捷键。</li>
+<li><strong>点击 Dock 图标的行为不稳定。</strong>只有在没有可见窗口时才带回搜索；如果还开着一个阅读窗口，点 Dock 图标只激活 app，搜索窗口不出现。</li>
+<li><strong>Space+P 在 app 自己处于前台时无效。</strong>从阅读窗口回到搜索只能用 ⌥Space 或 ⌘F，也不能用 Space+P 收起搜索；但菜单项「打开搜索&nbsp; (⌥Space / Space+P)」和关于窗口底部的说明（「⌥Space 或按住 Space 再按 P 呼出搜索」）都把两者并列，Space+P 未授权或已停用时这些文字也不变。</li>
+<li><strong>Space+P 菜单标题的刷新（已修复）。</strong>两个菜单现在每次打开都会通过 <code>menuNeedsUpdate</code> 重新读取状态，启动后才授予或撤销权限，标题也是对的；2 秒轮询除了启动时，也会由点击「开启 Space+P 快捷键（需授权辅助功能）…」重新开始。</li>
+<li><strong>⏎ 会覆盖最前面的阅读窗口。</strong>原来的经文被直接替换且无法后退；想保留必须记得用 ⇧⏎ / ⌘D。阅读窗口里也没有回到高亮节的办法，翻章后高亮永久丢失。</li>
+<li><strong>搜索窗口没被隐藏时输入不会清空。</strong><code>show()</code> 只在窗口不可见时清空输入；如果搜索窗口只是被阅读窗口盖住，再按 ⌥Space 会带着上一次的输入回来，与从隐藏状态唤出的表现不同。</li>
+</ol><footer>同目录的其他文档：<a href="app-map.html">app-map.html</a>（控件清单）· <a href="user-flow.html">user-flow.html</a>（抽象流程图）· <a href="storyboard.html">storyboard.html</a>（场景故事板）。截图用 <code>make ui-shots</code> 重新生成（离屏渲染，不会弹出窗口）。本页内容根据 2026-09-18 的源码整理：AppDelegate.swift、AboutWindow.swift、SearchWindow.swift、SearchView.swift、SearchViewModel.swift、ReaderWindow.swift、SpaceChordMonitor.swift、README.md。</footer></main>
+<div id="lb" role="dialog" aria-label="截图放大"></div>
+<script>
+(function(){
+  var d=document,root=d.documentElement;root.classList.remove('nojs');
+  var sc=d.getElementById('scroller'),sz=d.getElementById('sizer'),st=d.getElementById('stage'),out=d.getElementById('zv');
+  var W=+st.getAttribute('data-w'),H=+st.getAttribute('data-h'),z=1;
+  function apply(n,cx,cy){
+    n=Math.max(.12,Math.min(2,n));
+    var r=sc.getBoundingClientRect();if(cx==null){cx=r.width/2;cy=r.height/2;}
+    var px=(sc.scrollLeft+cx)/z,py=(sc.scrollTop+cy)/z;z=n;
+    st.style.transform='scale('+z+')';sz.style.width=Math.ceil(W*z)+'px';sz.style.height=Math.ceil(H*z)+'px';
+    sc.scrollLeft=px*z-cx;sc.scrollTop=py*z-cy;out.textContent=Math.round(z*100)+'%';
+  }
+  function fit(){apply(Math.min((sc.clientWidth-4)/W,(sc.clientHeight-4)/H));sc.scrollLeft=0;sc.scrollTop=0;}
+  function fitw(){apply((sc.clientWidth-16)/W);sc.scrollLeft=0;}
+  d.getElementById('zfit').onclick=fit;d.getElementById('zw').onclick=fitw;
+  d.getElementById('z100').onclick=function(){apply(1);};
+  d.getElementById('zin').onclick=function(){apply(z*1.25);};
+  d.getElementById('zout').onclick=function(){apply(z/1.25);};
+  sc.addEventListener('wheel',function(e){if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();
+    var r=sc.getBoundingClientRect();apply(z*Math.exp(-e.deltaY*0.01),e.clientX-r.left,e.clientY-r.top);},{passive:false});
+  var drag=null,moved=false;
+  sc.addEventListener('mousedown',function(e){if(e.button!==0)return;drag={x:e.clientX,y:e.clientY,l:sc.scrollLeft,t:sc.scrollTop};moved=false;});
+  window.addEventListener('mousemove',function(e){if(!drag)return;var dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(!moved&&Math.abs(dx)+Math.abs(dy)<5)return;moved=true;sc.classList.add('drag');sc.scrollLeft=drag.l-dx;sc.scrollTop=drag.t-dy;});
+  window.addEventListener('mouseup',function(){drag=null;sc.classList.remove('drag');});
+  sc.addEventListener('dblclick',function(e){if(e.target.closest('.shot'))return;var r=sc.getBoundingClientRect();
+    if(z<0.95)apply(1,e.clientX-r.left,e.clientY-r.top);else fit();});
+  var lb=d.getElementById('lb');
+  function openLb(el){lb.innerHTML='';var f=d.createElement('figure');f.style.margin='0';var c=el.cloneNode(true);
+    c.removeAttribute('tabindex');c.classList.remove('shot');var im=c.querySelector('img');im.removeAttribute('width');im.removeAttribute('height');im.removeAttribute('loading');
+    var cap=d.createElement('figcaption');cap.textContent=el.getAttribute('data-cap')+'（点击任意处或按 esc 关闭）';
+    f.appendChild(c);lb.appendChild(f);lb.appendChild(cap);lb.classList.add('on');}
+  st.addEventListener('click',function(e){var s=e.target.closest('.shot');if(s&&!moved)openLb(s);});
+  st.addEventListener('keydown',function(e){var s=e.target.closest&&e.target.closest('.shot');if(s&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openLb(s);}});
+  lb.addEventListener('click',function(){lb.classList.remove('on');});
+  d.addEventListener('keydown',function(e){if(e.key==='Escape')lb.classList.remove('on');});
+  window.addEventListener('resize',function(){if(z<0.5)fit();});
+  fit();
+})();
+</script>
+</body>
+</html>

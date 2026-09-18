@@ -1,0 +1,1593 @@
+[
+  {
+    "description" : "「关于好查经」窗口：图标、版本、作者写的「为什么做这个」、GitHub 链接、快捷键与经文来源。",
+    "files" : [
+      "about.light.png",
+      "about.dark.png"
+    ],
+    "height" : 500,
+    "name" : "about",
+    "regions" : [
+      {
+        "height" : 16,
+        "id" : "about.author",
+        "width" : 166,
+        "x" : 137,
+        "y" : 386
+      },
+      {
+        "height" : 31,
+        "id" : "about.footer",
+        "width" : 395,
+        "x" : 23,
+        "y" : 453
+      },
+      {
+        "height" : 96,
+        "id" : "about.icon",
+        "width" : 96,
+        "x" : 172,
+        "y" : 22
+      },
+      {
+        "height" : 26,
+        "id" : "about.name",
+        "width" : 63,
+        "x" : 189,
+        "y" : 124
+      },
+      {
+        "height" : 189,
+        "id" : "about.story",
+        "width" : 396,
+        "x" : 22,
+        "y" : 183
+      },
+      {
+        "height" : 15,
+        "id" : "about.version",
+        "width" : 195,
+        "x" : 123,
+        "y" : 152
+      }
+    ],
+    "scale" : 2,
+    "view" : "about",
+    "width" : 440
+  },
+  {
+    "description" : "搜索窗口刚打开、输入框为空时，中间显示输入提示和几个示例写法。",
+    "files" : [
+      "search-empty.light.png",
+      "search-empty.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-empty",
+    "query" : "",
+    "regions" : [
+      {
+        "height" : 379,
+        "id" : "search.emptyState",
+        "width" : 760,
+        "x" : 0,
+        "y" : 51
+      },
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
+    "description" : "输入 lq 13:4-8 只命中哥林多前书 13:4-8 一条结果，右侧预览滚动到第 4 节并高亮第 4-8 节。",
+    "files" : [
+      "search-result-verse.light.png",
+      "search-result-verse.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-result-verse",
+    "query" : "lq 13:4-8",
+    "regions" : [
+      {
+        "height" : 25,
+        "id" : "passage.verse.10",
+        "width" : 464,
+        "x" : 265,
+        "y" : 259
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.11",
+        "width" : 464,
+        "x" : 265,
+        "y" : 290
+      },
+      {
+        "height" : 69,
+        "id" : "passage.verse.12",
+        "width" : 464,
+        "x" : 265,
+        "y" : 343
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.13",
+        "width" : 464,
+        "x" : 265,
+        "y" : 418
+      },
+      {
+        "height" : 45,
+        "id" : "passage.verse.3",
+        "width" : 464,
+        "x" : 265,
+        "y" : 0
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.5",
+        "width" : 464,
+        "x" : 265,
+        "y" : 82
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.6",
+        "width" : 464,
+        "x" : 265,
+        "y" : 113
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.7",
+        "width" : 464,
+        "x" : 265,
+        "y" : 144
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.8",
+        "width" : 464,
+        "x" : 265,
+        "y" : 175
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.9",
+        "width" : 464,
+        "x" : 265,
+        "y" : 228
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.highlighted",
+        "width" : 464,
+        "x" : 265,
+        "y" : 51
+      },
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "height" : 379,
+        "id" : "search.preview",
+        "width" : 509,
+        "x" : 251,
+        "y" : 51
+      },
+      {
+        "height" : 379,
+        "id" : "search.resultList",
+        "width" : 250,
+        "x" : 0,
+        "y" : 51
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.selected",
+        "width" : 250,
+        "x" : 0,
+        "y" : 55
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
+    "description" : "输入 yh 3:16 命中多卷书，左侧列出多条结果，默认选中第一条并在右侧预览。",
+    "files" : [
+      "search-result-multi.light.png",
+      "search-result-multi.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-result-multi",
+    "query" : "yh 3:16",
+    "regions" : [
+      {
+        "height" : 14,
+        "id" : "passage.verse.14",
+        "width" : 464,
+        "x" : 265,
+        "y" : 0
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.15",
+        "width" : 464,
+        "x" : 265,
+        "y" : 20
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.17",
+        "width" : 464,
+        "x" : 265,
+        "y" : 104
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.18",
+        "width" : 464,
+        "x" : 265,
+        "y" : 157
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.19",
+        "width" : 464,
+        "x" : 265,
+        "y" : 210
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.20",
+        "width" : 464,
+        "x" : 265,
+        "y" : 263
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.21",
+        "width" : 464,
+        "x" : 265,
+        "y" : 294
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.22",
+        "width" : 464,
+        "x" : 265,
+        "y" : 325
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.23",
+        "width" : 464,
+        "x" : 265,
+        "y" : 356
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.24",
+        "width" : 464,
+        "x" : 265,
+        "y" : 387
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.25",
+        "width" : 464,
+        "x" : 265,
+        "y" : 418
+      },
+      {
+        "height" : 11,
+        "id" : "passage.verse.26",
+        "width" : 464,
+        "x" : 265,
+        "y" : 449
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.highlighted",
+        "width" : 464,
+        "x" : 265,
+        "y" : 51
+      },
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "height" : 379,
+        "id" : "search.preview",
+        "width" : 509,
+        "x" : 251,
+        "y" : 51
+      },
+      {
+        "height" : 379,
+        "id" : "search.resultList",
+        "width" : 250,
+        "x" : 0,
+        "y" : 51
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.1",
+        "width" : 250,
+        "x" : 0,
+        "y" : 100
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.selected",
+        "width" : 250,
+        "x" : 0,
+        "y" : 55
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
+    "description" : "同样输入 yh 3:16，用方向键选中第二条结果，右侧预览随选中项切换。",
+    "files" : [
+      "search-result-multi-second.light.png",
+      "search-result-multi-second.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-result-multi-second",
+    "query" : "yh 3:16",
+    "regions" : [
+      {
+        "height" : 45,
+        "id" : "passage.verse.15",
+        "width" : 464,
+        "x" : 265,
+        "y" : 0
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.17",
+        "width" : 464,
+        "x" : 265,
+        "y" : 82
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.18",
+        "width" : 464,
+        "x" : 265,
+        "y" : 135
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.19",
+        "width" : 464,
+        "x" : 265,
+        "y" : 188
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.20",
+        "width" : 464,
+        "x" : 265,
+        "y" : 219
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.21",
+        "width" : 464,
+        "x" : 265,
+        "y" : 250
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.22",
+        "width" : 464,
+        "x" : 265,
+        "y" : 303
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.23",
+        "width" : 464,
+        "x" : 265,
+        "y" : 356
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.24",
+        "width" : 464,
+        "x" : 265,
+        "y" : 409
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.highlighted",
+        "width" : 464,
+        "x" : 265,
+        "y" : 51
+      },
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "height" : 379,
+        "id" : "search.preview",
+        "width" : 509,
+        "x" : 251,
+        "y" : 51
+      },
+      {
+        "height" : 379,
+        "id" : "search.resultList",
+        "width" : 250,
+        "x" : 0,
+        "y" : 51
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.0",
+        "width" : 250,
+        "x" : 0,
+        "y" : 55
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.selected",
+        "width" : 250,
+        "x" : 0,
+        "y" : 100
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
+    "description" : "只输入书名片段“约”而不带章节时，结果列表只列出匹配的书卷。",
+    "files" : [
+      "search-result-books.light.png",
+      "search-result-books.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-result-books",
+    "query" : "约",
+    "regions" : [
+      {
+        "height" : 20,
+        "id" : "passage.heading",
+        "width" : 94,
+        "x" : 265,
+        "y" : 25
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.1",
+        "width" : 464,
+        "x" : 265,
+        "y" : 51
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.10",
+        "width" : 464,
+        "x" : 265,
+        "y" : 330
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.11",
+        "width" : 464,
+        "x" : 265,
+        "y" : 361
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.12",
+        "width" : 464,
+        "x" : 265,
+        "y" : 392
+      },
+      {
+        "height" : 37,
+        "id" : "passage.verse.13",
+        "width" : 464,
+        "x" : 265,
+        "y" : 423
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.2",
+        "width" : 464,
+        "x" : 265,
+        "y" : 82
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.3",
+        "width" : 464,
+        "x" : 265,
+        "y" : 113
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.4",
+        "width" : 464,
+        "x" : 265,
+        "y" : 144
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.5",
+        "width" : 464,
+        "x" : 265,
+        "y" : 175
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.6",
+        "width" : 464,
+        "x" : 265,
+        "y" : 206
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.7",
+        "width" : 464,
+        "x" : 265,
+        "y" : 237
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.8",
+        "width" : 464,
+        "x" : 265,
+        "y" : 268
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.9",
+        "width" : 464,
+        "x" : 265,
+        "y" : 299
+      },
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "height" : 379,
+        "id" : "search.preview",
+        "width" : 509,
+        "x" : 251,
+        "y" : 51
+      },
+      {
+        "height" : 379,
+        "id" : "search.resultList",
+        "width" : 250,
+        "x" : 0,
+        "y" : 51
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.1",
+        "width" : 250,
+        "x" : 0,
+        "y" : 100
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.2",
+        "width" : 250,
+        "x" : 0,
+        "y" : 145
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.3",
+        "width" : 250,
+        "x" : 0,
+        "y" : 190
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.4",
+        "width" : 250,
+        "x" : 0,
+        "y" : 235
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.5",
+        "width" : 250,
+        "x" : 0,
+        "y" : 280
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.6",
+        "width" : 250,
+        "x" : 0,
+        "y" : 325
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.7",
+        "width" : 250,
+        "x" : 0,
+        "y" : 370
+      },
+      {
+        "height" : 45,
+        "id" : "search.resultRow.selected",
+        "width" : 250,
+        "x" : 0,
+        "y" : 55
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
+    "description" : "输入 yhfyx 没有任何书卷匹配，显示“没有匹配的书卷或章节”及匹配规则说明。",
+    "files" : [
+      "search-no-match.light.png",
+      "search-no-match.dark.png"
+    ],
+    "height" : 460,
+    "name" : "search-no-match",
+    "query" : "yhfyx",
+    "regions" : [
+      {
+        "height" : 29,
+        "id" : "search.footer",
+        "width" : 760,
+        "x" : 0,
+        "y" : 431
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.copy",
+        "width" : 90,
+        "x" : 269,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.down",
+        "width" : 56,
+        "x" : 41,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.hide",
+        "width" : 64,
+        "x" : 363,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.open",
+        "width" : 58,
+        "x" : 101,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.openNew",
+        "width" : 102,
+        "x" : 163,
+        "y" : 435
+      },
+      {
+        "height" : 21,
+        "id" : "search.footer.up",
+        "width" : 29,
+        "x" : 8,
+        "y" : 435
+      },
+      {
+        "height" : 14,
+        "id" : "search.footer.version",
+        "width" : 55,
+        "x" : 697,
+        "y" : 439
+      },
+      {
+        "height" : 50,
+        "id" : "search.input",
+        "width" : 760,
+        "x" : 0,
+        "y" : 0
+      },
+      {
+        "height" : 379,
+        "id" : "search.noMatch",
+        "width" : 760,
+        "x" : 0,
+        "y" : 51
+      }
+    ],
+    "scale" : 2,
+    "view" : "search",
+    "width" : 760
+  },
+  {
+    "description" : "阅读窗口打开哥林多前书 13:4-8，滚动到第 4 节并高亮第 4-8 节。",
+    "files" : [
+      "reader-highlight.light.png",
+      "reader-highlight.dark.png"
+    ],
+    "height" : 720,
+    "name" : "reader-highlight",
+    "passage" : "哥林多前书 13:4-8",
+    "regions" : [
+      {
+        "height" : 20,
+        "id" : "passage.heading",
+        "width" : 116,
+        "x" : 14,
+        "y" : 55
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.1",
+        "width" : 612,
+        "x" : 14,
+        "y" : 81
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.10",
+        "width" : 612,
+        "x" : 14,
+        "y" : 404
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.11",
+        "width" : 612,
+        "x" : 14,
+        "y" : 435
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.12",
+        "width" : 612,
+        "x" : 14,
+        "y" : 488
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.13",
+        "width" : 612,
+        "x" : 14,
+        "y" : 541
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.2",
+        "width" : 612,
+        "x" : 14,
+        "y" : 112
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.3",
+        "width" : 612,
+        "x" : 14,
+        "y" : 165
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.5",
+        "width" : 612,
+        "x" : 14,
+        "y" : 227
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.6",
+        "width" : 612,
+        "x" : 14,
+        "y" : 258
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.7",
+        "width" : 612,
+        "x" : 14,
+        "y" : 289
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.8",
+        "width" : 612,
+        "x" : 14,
+        "y" : 320
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.9",
+        "width" : 612,
+        "x" : 14,
+        "y" : 373
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.highlighted",
+        "width" : 612,
+        "x" : 14,
+        "y" : 196
+      },
+      {
+        "height" : 24,
+        "id" : "reader.duplicate",
+        "width" : 41,
+        "x" : 544,
+        "y" : 8
+      },
+      {
+        "height" : 22,
+        "id" : "reader.next",
+        "width" : 34,
+        "x" : 592,
+        "y" : 9
+      },
+      {
+        "height" : 680,
+        "id" : "reader.passage",
+        "width" : 640,
+        "x" : 0,
+        "y" : 41
+      },
+      {
+        "height" : 22,
+        "id" : "reader.prev",
+        "width" : 34,
+        "x" : 14,
+        "y" : 9
+      },
+      {
+        "height" : 19,
+        "id" : "reader.title",
+        "width" : 95,
+        "x" : 249,
+        "y" : 11
+      },
+      {
+        "height" : 40,
+        "id" : "reader.toolbar",
+        "width" : 640,
+        "x" : 0,
+        "y" : 0
+      }
+    ],
+    "scale" : 2,
+    "view" : "reader",
+    "width" : 640
+  },
+  {
+    "description" : "阅读窗口打开约翰福音第 3 章整章，没有高亮，前后翻章按钮都可用。",
+    "files" : [
+      "reader-chapter.light.png",
+      "reader-chapter.dark.png"
+    ],
+    "height" : 720,
+    "name" : "reader-chapter",
+    "passage" : "约翰福音 3",
+    "regions" : [
+      {
+        "height" : 20,
+        "id" : "passage.heading",
+        "width" : 96,
+        "x" : 14,
+        "y" : 15
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.1",
+        "width" : 595,
+        "x" : 14,
+        "y" : 41
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.10",
+        "width" : 595,
+        "x" : 14,
+        "y" : 364
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.11",
+        "width" : 595,
+        "x" : 14,
+        "y" : 395
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.12",
+        "width" : 595,
+        "x" : 14,
+        "y" : 448
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.13",
+        "width" : 595,
+        "x" : 14,
+        "y" : 479
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.14",
+        "width" : 595,
+        "x" : 14,
+        "y" : 510
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.15",
+        "width" : 595,
+        "x" : 14,
+        "y" : 541
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.16",
+        "width" : 595,
+        "x" : 14,
+        "y" : 572
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.17",
+        "width" : 595,
+        "x" : 14,
+        "y" : 603
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.18",
+        "width" : 595,
+        "x" : 14,
+        "y" : 656
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.19",
+        "width" : 595,
+        "x" : 14,
+        "y" : 687
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.2",
+        "width" : 595,
+        "x" : 14,
+        "y" : 72
+      },
+      {
+        "height" : 3,
+        "id" : "passage.verse.20",
+        "width" : 595,
+        "x" : 14,
+        "y" : 718
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.3",
+        "width" : 595,
+        "x" : 14,
+        "y" : 125
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.4",
+        "width" : 595,
+        "x" : 14,
+        "y" : 156
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.5",
+        "width" : 595,
+        "x" : 14,
+        "y" : 187
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.6",
+        "width" : 595,
+        "x" : 14,
+        "y" : 218
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.7",
+        "width" : 595,
+        "x" : 14,
+        "y" : 249
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.8",
+        "width" : 595,
+        "x" : 14,
+        "y" : 280
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.9",
+        "width" : 595,
+        "x" : 14,
+        "y" : 333
+      },
+      {
+        "height" : 24,
+        "id" : "reader.duplicate",
+        "width" : 41,
+        "x" : 544,
+        "y" : 8
+      },
+      {
+        "height" : 22,
+        "id" : "reader.next",
+        "width" : 34,
+        "x" : 592,
+        "y" : 9
+      },
+      {
+        "height" : 680,
+        "id" : "reader.passage",
+        "width" : 640,
+        "x" : 0,
+        "y" : 41
+      },
+      {
+        "height" : 22,
+        "id" : "reader.prev",
+        "width" : 34,
+        "x" : 14,
+        "y" : 9
+      },
+      {
+        "height" : 19,
+        "id" : "reader.title",
+        "width" : 73,
+        "x" : 260,
+        "y" : 11
+      },
+      {
+        "height" : 40,
+        "id" : "reader.toolbar",
+        "width" : 640,
+        "x" : 0,
+        "y" : 0
+      }
+    ],
+    "scale" : 2,
+    "view" : "reader",
+    "width" : 640
+  },
+  {
+    "description" : "阅读窗口打开创世记第 1 章，已是第一章，所以上一章按钮为禁用状态。",
+    "files" : [
+      "reader-first-chapter.light.png",
+      "reader-first-chapter.dark.png"
+    ],
+    "height" : 720,
+    "name" : "reader-first-chapter",
+    "passage" : "创世记 1",
+    "regions" : [
+      {
+        "height" : 20,
+        "id" : "passage.heading",
+        "width" : 82,
+        "x" : 14,
+        "y" : 15
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.1",
+        "width" : 595,
+        "x" : 14,
+        "y" : 41
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.10",
+        "width" : 595,
+        "x" : 14,
+        "y" : 320
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.11",
+        "width" : 595,
+        "x" : 14,
+        "y" : 351
+      },
+      {
+        "height" : 47,
+        "id" : "passage.verse.12",
+        "width" : 595,
+        "x" : 14,
+        "y" : 404
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.13",
+        "width" : 595,
+        "x" : 14,
+        "y" : 457
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.14",
+        "width" : 595,
+        "x" : 14,
+        "y" : 488
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.15",
+        "width" : 595,
+        "x" : 14,
+        "y" : 519
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.16",
+        "width" : 595,
+        "x" : 14,
+        "y" : 550
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.17",
+        "width" : 595,
+        "x" : 14,
+        "y" : 581
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.18",
+        "width" : 595,
+        "x" : 14,
+        "y" : 612
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.19",
+        "width" : 595,
+        "x" : 14,
+        "y" : 643
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.2",
+        "width" : 595,
+        "x" : 14,
+        "y" : 72
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.20",
+        "width" : 595,
+        "x" : 14,
+        "y" : 674
+      },
+      {
+        "height" : 16,
+        "id" : "passage.verse.21",
+        "width" : 595,
+        "x" : 14,
+        "y" : 705
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.3",
+        "width" : 595,
+        "x" : 14,
+        "y" : 103
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.4",
+        "width" : 595,
+        "x" : 14,
+        "y" : 134
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.5",
+        "width" : 595,
+        "x" : 14,
+        "y" : 165
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.6",
+        "width" : 595,
+        "x" : 14,
+        "y" : 196
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.7",
+        "width" : 595,
+        "x" : 14,
+        "y" : 227
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.8",
+        "width" : 595,
+        "x" : 14,
+        "y" : 258
+      },
+      {
+        "height" : 25,
+        "id" : "passage.verse.9",
+        "width" : 595,
+        "x" : 14,
+        "y" : 289
+      },
+      {
+        "height" : 24,
+        "id" : "reader.duplicate",
+        "width" : 41,
+        "x" : 544,
+        "y" : 8
+      },
+      {
+        "height" : 22,
+        "id" : "reader.next",
+        "width" : 34,
+        "x" : 592,
+        "y" : 9
+      },
+      {
+        "height" : 680,
+        "id" : "reader.passage",
+        "width" : 640,
+        "x" : 0,
+        "y" : 41
+      },
+      {
+        "height" : 22,
+        "id" : "reader.prev",
+        "width" : 34,
+        "x" : 14,
+        "y" : 9
+      },
+      {
+        "height" : 19,
+        "id" : "reader.title",
+        "width" : 56,
+        "x" : 268,
+        "y" : 11
+      },
+      {
+        "height" : 40,
+        "id" : "reader.toolbar",
+        "width" : 640,
+        "x" : 0,
+        "y" : 0
+      }
+    ],
+    "scale" : 2,
+    "view" : "reader",
+    "width" : 640
+  }
+]
