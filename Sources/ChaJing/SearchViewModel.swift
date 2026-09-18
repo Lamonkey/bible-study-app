@@ -29,11 +29,12 @@ final class SearchViewModel: ObservableObject {
         selectedIndex = min(max(selectedIndex + delta, 0), results.count - 1)
     }
 
-    /// Enter: open the reader window at the selected passage.
-    func openSelected() {
+    /// Enter: show the selected passage in the frontmost reader window.
+    /// ⇧Enter / ⌘D: open it in a new reader window so several passages can be read side by side.
+    func openSelected(inNewWindow: Bool = false) {
         guard let r = selected else { return }
-        ReaderWindowController.shared.show(passage: r.passage)
-        SearchPanelController.shared.hide()
+        ReaderWindows.shared.open(r.passage, inNewWindow: inNewWindow)
+        SearchWindowController.shared.hide()
     }
 
     /// ⌘Enter: copy the selected verse(s) (or whole chapter) with its reference.
@@ -45,6 +46,6 @@ final class SearchViewModel: ObservableObject {
         let pb = NSPasteboard.general
         pb.clearContents()
         pb.setString(payload, forType: .string)
-        SearchPanelController.shared.hide()
+        SearchWindowController.shared.hide()
     }
 }

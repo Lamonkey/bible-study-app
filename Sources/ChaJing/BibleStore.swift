@@ -8,8 +8,20 @@ final class BibleStore {
     let books: [Book]
     private let byID: [Int: Book]
 
+    /// SwiftPM's generated `Bundle.module` only looks beside the executable's bundle root
+    /// and at the absolute build directory of the machine that compiled it, and traps if
+    /// neither exists. A packaged .app keeps resources in Contents/Resources, so look
+    /// there first; fall back to `Bundle.module` for `swift run` and `swift test`.
+    private static var resources: Bundle {
+        if let url = Bundle.main.resourceURL?.appendingPathComponent("ChaJing_ChaJing.bundle"),
+           let bundle = Bundle(url: url) {
+            return bundle
+        }
+        return Bundle.module
+    }
+
     private init() {
-        guard let url = Bundle.module.url(forResource: "cus", withExtension: "json") else {
+        guard let url = Self.resources.url(forResource: "cus", withExtension: "json") else {
             fatalError("cus.json missing from bundle; run `python3 scripts/build_data.py`")
         }
         do {

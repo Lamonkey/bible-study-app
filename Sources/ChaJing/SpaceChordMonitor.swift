@@ -11,8 +11,9 @@ import CoreGraphics
 ///     front receives it (followed by the other key, in order). Typing feels normal;
 ///     only a Space held longer than the window is delivered slightly late.
 /// Needs Accessibility permission (System Settings > Privacy & Security > Accessibility).
-/// The chord is ignored while ChaJing itself is the active app so the search field
-/// can be typed into normally.
+/// The chord is ignored while ChaJing itself is the active app, or while its search panel
+/// holds the keyboard as an overlay (the app is then NOT active), so the search field can
+/// be typed into normally.
 final class SpaceChordMonitor {
     private static let magic: Int64 = 0x43484A5F5350 // tag for events we post ourselves
     private static let spaceKey: Int64 = 49
@@ -95,7 +96,8 @@ final class SpaceChordMonitor {
         // Events we posted ourselves go straight through.
         if event.getIntegerValueField(.eventSourceUserData) == Self.magic { return pass }
         // Don't interfere with our own search field or with modifier shortcuts (⌘Space etc.).
-        if NSApp.isActive {
+        // The search panel is non-activating: as an overlay it is key while the app is inactive.
+        if NSApp.isActive || SearchWindowController.shared.isFrontmost {
             // Our own panel just came up (or the user is typing in it): deliver anything
             // still held and forget the chord state so a stale keyUp can't be swallowed later.
             if pendingSpace { flushPendingSpace() }

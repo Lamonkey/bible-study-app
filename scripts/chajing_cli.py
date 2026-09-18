@@ -12,7 +12,8 @@ rules can be exercised without Xcode:
 Rules (no fuzzy matching):
   * Name part = leading run of non-digit characters.
   * Chinese name: exact substring of the book name / alias, or exact abbreviation.
-  * Latin name: pinyin, matched syllable by syllable. Each query chunk must be a
+  * Latin name: pinyin (of the full name or of the abbreviation), matched syllable
+    by syllable. Each query chunk must be a
     prefix of the corresponding syllable ("yhfy", "yuehan", "yuehfy" all hit
     约翰福音). "*" matches any number of whole syllables, "?" exactly one.
     A query may stop early (prefix of the book), but never skips or reorders.
@@ -93,19 +94,42 @@ def match_books(name, books):
     if not re.fullmatch(r"[a-z*?]+", name):
         return []
     for b in books:
-        syls = b["pinyin"]
-        if not pinyin_match(name, syls):
-            continue
-        initials = "".join(s[0] for s in syls)
-        full = "".join(syls)
-        if name == initials or name == full:
-            hits.append((0, b))
-        elif initials.startswith(name) or full.startswith(name):
-            hits.append((1, b))
-        else:
-            hits.append((2, b))
+        # Full name and standard abbreviation (林前 -> "lq" / "linqian") are both
+        # matched; the better rank wins.
+        best = None
+        for syls in (b["pinyin"], abbr_pinyin(b)):
+            if not syls or not pinyin_match(name, syls):
+                continue
+            initials = "".join(s[0] for s in syls)
+            full = "".join(syls)
+            if name == initials or name == full:
+                rank = 0
+            elif initials.startswith(name) or full.startswith(name):
+                rank = 1
+            else:
+                rank = 2
+            if best is None or rank < best:
+                best = rank
+        if best is not None:
+            hits.append((best, b))
     hits.sort(key=lambda h: (h[0], h[1]["id"]))
     return hits
+
+
+def abbr_pinyin(b):
+    """Pinyin syllables of the abbreviation, found by locating each of its characters
+    in the book name in order: ["lin", "qian"] for 林前 (哥林多前书)."""
+    name, syls = b["name"], b["pinyin"]
+    if len(name) != len(syls):
+        return []
+    out, pos = [], 0
+    for ch in b["abbr"]:
+        i = name.find(ch, pos)
+        if i < 0:
+            return []
+        out.append(syls[i])
+        pos = i + 1
+    return out
 
 
 def search(q, books):
@@ -146,6 +170,12 @@ def run_tests(books):
     assert names("*fy") == ["西番雅书", "马太福音", "马可福音", "路加福音", "约翰福音"]  # xi-FAN-YA also fits
     assert names("?han") == ["约翰福音", "约翰一书", "约翰二书", "约翰三书"]
     assert names("mt") == ["马太福音"]
+    assert names("lq") == ["哥林多前书"]                # pinyin initials of the abbreviation 林前
+    assert names("linqian") == ["哥林多前书"]
+    assert names("lq 13:4-8") == ["哥林多前书"]
+    assert names("lqs") == []                          # 林前 has no 书 syllable
+    assert names("tq") == ["帖撒罗尼迦前书", "提摩太前书"]
+    assert names("yue")[0] == "约翰福音"                # abbreviation 约 ranks first, like "约"
     assert names("约翰福音 4:24") == ["约翰福音"]
     assert names("约 4:24") == ["约翰福音", "约书亚记"]   # abbreviation first, then 约书亚记 4:24 (exists)
     assert names("约")[:1] == ["约翰福音"]           # abbreviation ranks first

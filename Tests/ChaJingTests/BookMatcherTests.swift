@@ -13,6 +13,7 @@ final class BookMatcherTests: XCTestCase {
         book(36, "西番雅书", "番", "xi fan ya shu", chapters: [18, 15, 20]),
         book(40, "马太福音", "太", "ma tai fu yin", chapters: Array(repeating: 30, count: 28)),
         book(43, "约翰福音", "约", "yue han fu yin", chapters: Array(repeating: 54, count: 21)),
+        book(46, "哥林多前书", "林前", "ge lin duo qian shu", chapters: Array(repeating: 31, count: 16)),
         book(62, "约翰一书", "约一", "yue han yi shu", aliases: ["约翰壹书", "约壹"], chapters: [10, 29, 24, 21, 21]),
         book(63, "约翰二书", "约二", "yue han er shu", chapters: [13]),
     ]
@@ -38,7 +39,17 @@ final class BookMatcherTests: XCTestCase {
         XCTAssertEqual(names("y*fy"), ["约翰福音"])
         XCTAssertEqual(names("*fy"), ["西番雅书", "马太福音", "约翰福音"])
         XCTAssertEqual(names("?han"), ["约翰福音", "约翰一书", "约翰二书"])
-        XCTAssertEqual(names("*"), ["约书亚记", "西番雅书", "马太福音", "约翰福音", "约翰一书", "约翰二书"])
+        XCTAssertEqual(names("*"), ["约书亚记", "西番雅书", "马太福音", "约翰福音", "哥林多前书", "约翰一书", "约翰二书"])
+    }
+
+    func testAbbreviationPinyin() {
+        XCTAssertEqual(names("lq"), ["哥林多前书"])
+        XCTAssertEqual(names("linq"), ["哥林多前书"])
+        XCTAssertEqual(names("linqian"), ["哥林多前书"])
+        XCTAssertEqual(names("gldqs"), ["哥林多前书"])          // full name still works
+        XCTAssertEqual(names("lq 13:4-8"), ["哥林多前书 13:4-8"])
+        XCTAssertEqual(names("lqs"), [])                       // 林前 has no 书 syllable
+        XCTAssertEqual(names("y").first, "约翰福音")           // abbreviation 约 ranks first, like "约"
     }
 
     func testNoFuzzyMatching() {

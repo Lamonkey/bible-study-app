@@ -28,6 +28,26 @@ struct Book: Codable, Identifiable, Hashable {
     /// "yuehanfuyin" for 约翰福音.
     var fullPinyin: String { pinyin.joined() }
 
+    /// Pinyin syllables of `abbr`, derived by locating each abbreviation character in
+    /// `name`: ["lin", "qian"] for 林前 (哥林多前书). Empty if the abbreviation is not an
+    /// in-order subsequence of the name.
+    var abbrPinyin: [String] {
+        guard pinyin.count == name.count else { return [] }
+        let chars = Array(name)
+        var out: [String] = []
+        var pos = 0
+        for c in abbr {
+            guard let i = chars[pos...].firstIndex(of: c) else { return [] }
+            out.append(pinyin[i])
+            pos = i + 1
+        }
+        return out
+    }
+    /// "lq" for 林前.
+    var abbrInitials: String { abbrPinyin.map { String($0.prefix(1)) }.joined() }
+    /// "linqian" for 林前.
+    var abbrFullPinyin: String { abbrPinyin.joined() }
+
     static func == (lhs: Book, rhs: Book) -> Bool { lhs.id == rhs.id }
     func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }

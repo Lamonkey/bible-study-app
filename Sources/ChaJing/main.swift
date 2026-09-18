@@ -3,6 +3,6 @@ import AppKit
 let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate
-// Menu-bar utility: no Dock icon, no app menu.
-app.setActivationPolicy(.accessory)
+// Regular app: Dock icon, main menu, windows. The hotkeys are live while it runs.
+app.setActivationPolicy(.regular)
 app.run()

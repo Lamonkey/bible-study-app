@@ -23,6 +23,8 @@ struct BookMatch {
 ///   a prefix of the corresponding syllable, so "yhfy", "yuehan" and "yuehfy" all hit
 ///   约翰福音. `*` matches any number of whole syllables, `?` exactly one syllable.
 ///   A query may stop early (prefix of the book) but never skips or reorders syllables.
+///   The same rules are applied to the pinyin of the standard abbreviation, so 林前
+///   (哥林多前书) is also hit by "lq", "linq" and "linqian".
 enum BookMatcher {
     static func match(name rawName: String, in books: [Book]) -> [BookMatch] {
         let name = rawName.trimmingCharacters(in: .whitespaces).lowercased()
@@ -47,14 +49,27 @@ enum BookMatcher {
             }
             let q = Array(name)
             for b in books {
-                let syls = b.pinyin.map { Array($0) }
-                guard pinyinMatch(q, 0, syls, 0) else { continue }
-                if name == b.initials || name == b.fullPinyin {
-                    hits.append(BookMatch(book: b, rank: .exact))
-                } else if b.initials.hasPrefix(name) || b.fullPinyin.hasPrefix(name) {
-                    hits.append(BookMatch(book: b, rank: .prefix))
-                } else {
-                    hits.append(BookMatch(book: b, rank: .partial))
+                // The full name and the standard abbreviation (林前 -> "lq" / "linqian")
+                // are both matched; the better rank wins.
+                let candidates = [
+                    (b.pinyin, b.initials, b.fullPinyin),
+                    (b.abbrPinyin, b.abbrInitials, b.abbrFullPinyin),
+                ]
+                var best: MatchRank?
+                for (pinyin, initials, full) in candidates where !pinyin.isEmpty {
+                    guard pinyinMatch(q, 0, pinyin.map { Array($0) }, 0) else { continue }
+                    let rank: MatchRank
+                    if name == initials || name == full {
+                        rank = .exact
+                    } else if initials.hasPrefix(name) || full.hasPrefix(name) {
+                        rank = .prefix
+                    } else {
+                        rank = .partial
+                    }
+                    if best == nil || rank < best! { best = rank }
+                }
+                if let rank = best {
+                    hits.append(BookMatch(book: b, rank: rank))
                 }
             }
         }

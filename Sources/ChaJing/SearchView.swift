@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Spotlight-style search bar: input on top, matching references on the left,
+/// Main window content: search input on top, matching references on the left,
 /// the selected passage on the right.
 struct SearchView: View {
     @ObservedObject var model: SearchViewModel
@@ -20,32 +20,60 @@ struct SearchView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .uiRegion("search.input")
 
             Divider()
 
             if model.results.isEmpty {
                 emptyState
+                    .uiRegion(model.query.trimmingCharacters(in: .whitespaces).isEmpty ? "search.emptyState" : "search.noMatch")
             } else {
                 HStack(spacing: 0) {
                     resultList
                         .frame(width: 250)
+                        .uiRegion("search.resultList")
                     Divider()
                     PassageView(passage: model.selected?.passage, highlight: model.selected?.passage.verseRange)
+                        .uiRegion("search.preview")
                 }
             }
 
             Divider()
-            HStack {
-                Text("↑↓ 选择    ⏎ 打开阅读窗口    ⌘⏎ 复制经文    esc 关闭")
+            // Every hint is also a button: someone new to the app can click their way
+            // through and pick up the shortcuts from the labels as they go.
+            HStack(spacing: 4) {
+                HintButton(keys: "↑", label: nil, help: "上一条结果") { model.moveSelection(by: -1) }
+                    .disabled(model.results.count < 2)
+                    .uiRegion("search.footer.up")
+                HintButton(keys: "↓", label: "选择", help: "下一条结果") { model.moveSelection(by: 1) }
+                    .disabled(model.results.count < 2)
+                    .uiRegion("search.footer.down")
+                HintButton(keys: "⏎", label: "打开", help: "在阅读窗口中打开所选经文") { model.openSelected() }
+                    .disabled(model.selected == nil)
+                    .uiRegion("search.footer.open")
+                HintButton(keys: "⇧⏎", label: "新窗口打开", help: "在新的阅读窗口中打开，方便几处经文对照") {
+                    model.openSelected(inNewWindow: true)
+                }
+                .disabled(model.selected == nil)
+                .uiRegion("search.footer.openNew")
+                HintButton(keys: "⌘⏎", label: "复制经文", help: "把所选经文和出处复制到剪贴板") { model.copySelected() }
+                    .disabled(model.selected == nil)
+                    .uiRegion("search.footer.copy")
+                HintButton(keys: "esc", label: "隐藏", help: "收起搜索窗口，应用留在后台") {
+                    SearchWindowController.shared.hide()
+                }
+                .uiRegion("search.footer.hide")
                 Spacer()
                 Text("简体和合本")
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+                    .uiRegion("search.footer.version")
             }
-            .font(.system(size: 11))
-            .foregroundColor(.secondary)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .uiRegion("search.footer")
         }
-        .frame(width: 760, height: 460)
+        .frame(minWidth: 640, minHeight: 380)
         .onAppear { inputFocused = true }
         .onChange(of: model.focusToken) { _ in inputFocused = true }
     }
@@ -77,6 +105,7 @@ struct SearchView: View {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     ForEach(Array(model.results.enumerated()), id: \.element.id) { idx, r in
                         ResultRow(result: r, selected: idx == model.selectedIndex)
+                            .uiRegion(idx == model.selectedIndex ? "search.resultRow.selected" : "search.resultRow.\(idx)")
                             .id(r.id)
                             .contentShape(Rectangle())
                             .onTapGesture {
@@ -94,6 +123,45 @@ struct SearchView: View {
                 if let r = model.selected { proxy.scrollTo(r.id) }
             }
         }
+    }
+}
+
+/// One entry of the footer bar: a keycap plus what it does. Clicking it performs the same
+/// action as the shortcut it shows. Buttons do not take keyboard focus on macOS, so the
+/// search field keeps the caret.
+struct HintButton: View {
+    let keys: String
+    let label: String?
+    let help: String
+    let action: () -> Void
+
+    @State private var hovering = false
+    @Environment(\.isEnabled) private var isEnabled
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 5) {
+                Text(keys)
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 1)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.primary.opacity(0.08)))
+                    .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color.primary.opacity(0.12)))
+                if let label {
+                    Text(label).font(.system(size: 11))
+                }
+            }
+            .foregroundColor(hovering && isEnabled ? .primary : .secondary)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 3)
+            .background(RoundedRectangle(cornerRadius: 6).fill(Color.primary.opacity(hovering && isEnabled ? 0.08 : 0)))
+            .contentShape(Rectangle())
+            .opacity(isEnabled ? 1 : 0.45)
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering = $0 }
+        .help(help)
+        .accessibilityLabel(label.map { "\($0)，快捷键 \(keys)" } ?? help)
     }
 }
 
@@ -137,8 +205,10 @@ struct PassageView: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundColor(.secondary)
                             .padding(.bottom, 4)
+                            .uiRegion("passage.heading")
                         ForEach(Array(verses.enumerated()), id: \.offset) { i, v in
                             VerseLine(number: i + 1, text: v, highlighted: highlight?.contains(i + 1) ?? false)
+                                .uiRegion(highlight?.lowerBound == i + 1 ? "passage.verse.highlighted" : "passage.verse.\(i + 1)")
                                 .id(i + 1)
                         }
                     }
